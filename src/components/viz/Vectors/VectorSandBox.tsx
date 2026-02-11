@@ -12,9 +12,9 @@ export default function VectorSandbox() {
   const [isDragging, setIsDragging] = useState(false);
 
   // Constants
-  const width = containerWidth || 600;
-  const height = 400;
-  const scale = useMemo(() => Math.min(width, height) / 12, [width, height]);
+  const width = containerWidth || 500;
+  const height = width; // Maintain square 1:1
+  const scale = useMemo(() => width / 12, [width]);
   const centerX = width / 2;
   const centerY = height / 2;
 
@@ -39,8 +39,8 @@ export default function VectorSandbox() {
       .attr('fill', 'var(--color-primary)');
 
     // Grid System
-    const xGrid = D3.range(-15, 16).map(i => i * scale);
-    const yGrid = D3.range(-15, 16).map(i => i * scale);
+    const xGrid = D3.range(-6, 7).map(i => i * scale);
+    const yGrid = D3.range(-6, 7).map(i => i * scale);
 
     const gridGroup = svg.append('g')
       .attr('transform', `translate(${centerX}, ${centerY})`);
@@ -49,52 +49,59 @@ export default function VectorSandbox() {
     gridGroup.selectAll('line.v')
       .data(xGrid).enter().append('line')
       .attr('class', 'v')
-      .attr('x1', d => d).attr('y1', -height)
-      .attr('x2', d => d).attr('y2', height)
+      .attr('x1', d => d).attr('y1', -height / 2)
+      .attr('x2', d => d).attr('y2', height / 2)
       .attr('stroke', 'var(--color-text)')
-      .attr('stroke-opacity', 0.05);
+      .attr('stroke-opacity', 0.08);
 
     gridGroup.selectAll('line.h')
       .data(yGrid).enter().append('line')
       .attr('class', 'h')
-      .attr('x1', -width).attr('y1', d => d)
-      .attr('x2', width).attr('y2', d => d)
+      .attr('x1', -width / 2).attr('y1', d => d)
+      .attr('x2', width / 2).attr('y2', d => d)
       .attr('stroke', 'var(--color-text)')
-      .attr('stroke-opacity', 0.05);
+      .attr('stroke-opacity', 0.08);
 
     // Axes
     gridGroup.append('line')
-      .attr('x1', -width).attr('y1', 0)
-      .attr('x2', width).attr('y2', 0)
-      .attr('stroke', 'var(--color-text)').attr('stroke-opacity', 0.2);
+      .attr('x1', -width / 2).attr('y1', 0)
+      .attr('x2', width / 2).attr('y2', 0)
+      .attr('stroke', 'var(--color-text)').attr('stroke-opacity', 0.3)
+      .attr('stroke-width', 1.5);
 
     gridGroup.append('line')
-      .attr('x1', 0).attr('y1', -height)
-      .attr('x2', 0).attr('y2', height)
-      .attr('stroke', 'var(--color-text)').attr('stroke-opacity', 0.2);
+      .attr('x1', 0).attr('y1', -height / 2)
+      .attr('x2', 0).attr('y2', height / 2)
+      .attr('stroke', 'var(--color-text)').attr('stroke-opacity', 0.3)
+      .attr('stroke-width', 1.5);
 
-    // Axis Labels (LaTeX-style via font)
-    const labels = [
-      { text: 'x', x: width / 2 - 20, y: 15 },
-      { text: 'y', x: 15, y: -height / 2 + 20 }
-    ];
-
-    gridGroup.selectAll('text.axis-label')
-      .data(labels).enter().append('text')
-      .attr('class', 'axis-label')
-      .attr('x', d => d.x).attr('y', d => d.y)
+    // Axis Labels
+    gridGroup.append('text')
+      .attr('x', width / 2 - 20).attr('y', 20)
       .attr('fill', 'var(--color-text-dim)')
       .attr('font-family', 'var(--font-math)')
       .attr('font-style', 'italic')
-      .attr('font-size', '16px')
-      .text(d => d.text);
+      .attr('font-size', '18px')
+      .text('x');
+
+    gridGroup.append('text')
+      .attr('x', 15).attr('y', -height / 2 + 25)
+      .attr('fill', 'var(--color-text-dim)')
+      .attr('font-family', 'var(--font-math)')
+      .attr('font-style', 'italic')
+      .attr('font-size', '18px')
+      .text('y');
 
     // The Vector
     const drag = D3.drag<SVGCircleElement, unknown>()
       .on('drag', (event) => {
         const newX = Math.round((event.x - centerX) / scale * 2) / 2;
         const newY = Math.round((-(event.y - centerY)) / scale * 2) / 2;
-        setPosition({ x: newX, y: newY });
+        // Clamp to grid
+        setPosition({
+          x: Math.max(-5, Math.min(5, newX)),
+          y: Math.max(-5, Math.min(5, newY))
+        });
       })
       .on('start', () => setIsDragging(true))
       .on('end', () => setIsDragging(false));
@@ -107,8 +114,8 @@ export default function VectorSandbox() {
       .attr('x1', 0).attr('y1', 0)
       .attr('x2', pixelX).attr('y2', pixelY)
       .attr('stroke', 'var(--color-primary)')
-      .attr('stroke-width', 8)
-      .attr('stroke-opacity', 0.1)
+      .attr('stroke-width', 10)
+      .attr('stroke-opacity', 0.05)
       .attr('stroke-linecap', 'round');
 
     // Vector Line
@@ -122,9 +129,9 @@ export default function VectorSandbox() {
     // Drag Handle
     const handle = gridGroup.append('circle')
       .attr('cx', pixelX).attr('cy', pixelY)
-      .attr('r', 12)
+      .attr('r', 10)
       .attr('fill', 'var(--color-primary)')
-      .attr('fill-opacity', 0.1)
+      .attr('fill-opacity', 0.2)
       .attr('stroke', 'var(--color-primary)')
       .attr('stroke-width', 2)
       .style('cursor', 'grab')
@@ -135,27 +142,27 @@ export default function VectorSandbox() {
   }, [position, isDragging, width, scale, centerX, centerY]);
 
   return (
-    <div ref={containerRef} className="w-full h-full flex flex-col items-center justify-center p-6 gap-6">
-      <div className="relative w-full aspect-[3/2] border border-glass-border rounded-2xl overflow-hidden bg-glass-bg shadow-inner">
-        <svg ref={svgRef} width={width} height={height} className="block" />
+    <div ref={containerRef} className="w-full h-full flex flex-col items-center justify-start p-4 gap-4">
+      <div className="relative w-full aspect-square border border-glass-border rounded-3xl overflow-hidden bg-glass-bg/30 shadow-inner group">
+        <svg ref={svgRef} width={width} height={height} className="block mx-auto" />
 
         {/* Live Stats Overlay */}
-        <div className="absolute bottom-6 left-6 glass-panel p-4 text-sm font-mono space-y-2 z-10 pointer-events-none border border-glass-border">
+        <div className="absolute bottom-4 left-4 glass-panel p-3 text-sm font-mono space-y-2 z-10 pointer-events-none border border-glass-border shadow-lg">
           <div className="flex items-center gap-2">
-            <span className="text-text-dim italic font-math">v = </span>
-            <div className="flex flex-col border-l-2 border-r-2 border-primary/30 px-2 leading-tight">
+            <span className="text-text-dim italic font-math text-base">v = </span>
+            <div className="flex flex-col border-l-2 border-r-2 border-primary/20 px-3 leading-tight font-bold">
               <span className="text-primary">{position.x.toFixed(1)}</span>
               <span className="text-primary">{position.y.toFixed(1)}</span>
             </div>
           </div>
-          <div className="text-color-text">
-            <span className="text-text-dim italic font-math">|v| = </span>
-            <span className="font-bold">{Math.sqrt(position.x ** 2 + position.y ** 2).toFixed(2)}</span>
+          <div className="text-color-text border-t border-glass-border pt-1">
+            <span className="text-text-dim italic font-math text-base">|v| = </span>
+            <span className="font-bold text-secondary">{Math.sqrt(position.x ** 2 + position.y ** 2).toFixed(2)}</span>
           </div>
         </div>
 
-        <div className="absolute top-6 right-6 text-xs text-text-dim text-right bg-glass-bg/50 px-3 py-2 rounded-full backdrop-blur-sm border border-glass-border">
-          Drag the tip or use sliders
+        <div className="absolute top-4 right-4 text-[10px] uppercase tracking-tighter text-text-dim bg-glass-bg/80 px-3 py-1.5 rounded-full backdrop-blur-md border border-glass-border font-bold">
+          Interactive Vector
         </div>
       </div>
 

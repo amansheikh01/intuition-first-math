@@ -20,9 +20,9 @@ function EigenHunter() {
         y: matrix.c * v.x + matrix.d * v.y
     });
 
-    const width = containerWidth || 600;
-    const height = 400;
-    const scale = useMemo(() => Math.min(width, height) / 10, [width, height]);
+    const width = containerWidth || 500;
+    const height = width; // Maintain square 1:1
+    const scale = useMemo(() => width / 12, [width]);
     const centerX = width / 2;
     const centerY = height / 2;
 
@@ -34,17 +34,17 @@ function EigenHunter() {
         const g = svg.append('g').attr('transform', `translate(${centerX}, ${centerY})`);
 
         // Coordinate Grid
-        const range = D3.range(-10, 11).map(i => i * scale);
-        g.selectAll('line.grid')
+        const range = D3.range(-6, 7).map(i => i * scale);
+        g.selectAll('line.grid-v')
             .data(range).enter()
             .append('line')
-            .attr('x1', d => d).attr('y1', -height).attr('x2', d => d).attr('y2', height)
-            .attr('stroke', 'var(--color-text)').attr('stroke-opacity', 0.05);
+            .attr('x1', d => d).attr('y1', -height / 2).attr('x2', d => d).attr('y2', height / 2)
+            .attr('stroke', 'var(--color-text)').attr('stroke-opacity', 0.08);
         g.selectAll('line.grid-h')
             .data(range).enter()
             .append('line')
-            .attr('x1', -width).attr('y1', d => d).attr('x2', width).attr('y2', d => d)
-            .attr('stroke', 'var(--color-text)').attr('stroke-opacity', 0.05);
+            .attr('x1', -width / 2).attr('y1', d => d).attr('x2', width / 2).attr('y2', d => d)
+            .attr('stroke', 'var(--color-text)').attr('stroke-opacity', 0.08);
 
         // Transformed Circle (The Transformation Profile)
         const circlePoints = D3.range(0, 2 * Math.PI, 0.05).map(angle => {
@@ -62,10 +62,10 @@ function EigenHunter() {
             .datum(circlePoints)
             .attr('d', lineGen)
             .attr('fill', 'var(--color-primary)')
-            .attr('fill-opacity', 0.05)
+            .attr('fill-opacity', 0.03)
             .attr('stroke', 'var(--color-text)')
-            .attr('stroke-opacity', 0.1)
-            .attr('stroke-dasharray', '4 4');
+            .attr('stroke-opacity', 0.15)
+            .attr('stroke-dasharray', '4 2');
 
         // Logic
         const px = Math.cos(probeAngle);
@@ -84,7 +84,7 @@ function EigenHunter() {
         g.append('line')
             .attr('x1', 0).attr('y1', 0)
             .attr('x2', res.x * scale).attr('y2', -res.y * scale)
-            .attr('stroke', 'var(--color-text)').attr('stroke-width', 2).attr('stroke-opacity', 0.3)
+            .attr('stroke', 'var(--color-text)').attr('stroke-width', 2).attr('stroke-opacity', 0.4)
             .attr('marker-end', `url(#arrow-res)`);
 
         // Draw Probe (Input)
@@ -110,35 +110,41 @@ function EigenHunter() {
 
         g.append('circle')
             .attr('cx', px * scale * 2).attr('cy', -py * scale * 2)
-            .attr('r', 20)
-            .attr('fill', 'transparent')
+            .attr('r', 15)
+            .attr('fill', probeColor)
+            .attr('fill-opacity', 0.2)
+            .attr('stroke', probeColor)
+            .attr('stroke-width', 2)
             .style('cursor', 'grab')
             .call(drag as any);
 
     }, [probeAngle, matrix, width, scale, centerX, centerY]);
 
     return (
-        <div ref={containerRef} className="w-full h-full flex flex-col items-center justify-center p-6 gap-6">
-            <div className="relative w-full aspect-[3/2] border border-glass-border rounded-2xl overflow-hidden bg-glass-bg shadow-inner">
-                <svg ref={svgRef} width={width} height={height} className="block" />
+        <div ref={containerRef} className="w-full h-full flex flex-col items-center justify-start p-4 gap-4">
+            <div className="relative w-full aspect-square border border-glass-border rounded-3xl overflow-hidden bg-glass-bg/30 shadow-inner group">
+                <svg ref={svgRef} width={width} height={height} className="block mx-auto" />
 
-                <div className={`absolute bottom-6 left-6 glass-panel py-2 px-4 text-sm font-bold transition-all border-2 ${isEigen ? 'border-success text-success bg-success/5 animate-pulse' : 'border-glass-border text-text-dim'}`}>
+                <div className={`absolute bottom-4 left-4 glass-panel py-2 px-4 text-[10px] font-bold tracking-widest transition-all border-2 shadow-lg ${isEigen ? 'border-success text-success bg-success/5 animate-pulse' : 'border-glass-border text-text-dim opacity-50'}`}>
                     {isEigen ? "EIGEN-DIRECTION DETECTED" : "HUNTING FOR AXIS..."}
                 </div>
 
-                <div className="absolute top-6 right-6 text-xs text-text-dim text-right bg-glass-bg/50 px-3 py-2 rounded-full backdrop-blur-sm border border-glass-border">
-                    Drag the <span className="text-accent font-bold">Probe</span> to find stable axes
+                <div className="absolute top-4 right-4 text-[10px] font-bold uppercase tracking-tighter text-text-dim bg-glass-bg/80 px-3 py-1.5 rounded-full backdrop-blur-md border border-glass-border shadow-sm">
+                    Stability Probe
                 </div>
             </div>
 
-            <div className="w-full max-w-md p-4 glass-panel border border-glass-border text-center">
+            <div className="w-full max-w-sm p-6 glass-panel border border-glass-border text-center shadow-sm">
+                <div className="flex justify-between items-center mb-4">
+                    <span className="text-[10px] font-bold uppercase tracking-widest text-text-dim">Probe Angle</span>
+                    <span className="text-xs font-mono font-bold text-accent bg-accent/10 px-2 py-0.5 rounded">{(probeAngle * 180 / Math.PI).toFixed(1)}°</span>
+                </div>
                 <input
                     type="range" min="0" max={2 * Math.PI} step="0.01"
                     value={probeAngle}
                     onChange={(e) => setProbeAngle(parseFloat(e.target.value))}
                     className="w-full accent-accent"
                 />
-                <div className="text-[10px] uppercase tracking-widest text-text-dim mt-2">Adjust Probe Angle Manually</div>
             </div>
         </div>
     );

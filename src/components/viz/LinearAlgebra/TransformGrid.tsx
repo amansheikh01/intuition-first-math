@@ -12,9 +12,9 @@ export default function TransformGrid() {
     const [isDragging, setIsDragging] = useState<string | null>(null);
 
     // Constants
-    const width = containerWidth || 600;
-    const height = Math.min(width * 0.66, 400);
-    const scale = useMemo(() => Math.min(width, height) / 10, [width, height]);
+    const width = containerWidth || 500;
+    const height = width; // Maintain square 1:1
+    const scale = useMemo(() => width / 12, [width]);
     const centerX = width / 2;
     const centerY = height / 2;
 
@@ -46,8 +46,8 @@ export default function TransformGrid() {
                 .attr('x1', startV.x).attr('y1', startV.y)
                 .attr('x2', endV.x).attr('y2', endV.y)
                 .attr('stroke', 'var(--color-text)')
-                .attr('stroke-opacity', i === 0 ? 0.2 : 0.05)
-                .attr('stroke-width', i === 0 ? 2 : 1);
+                .attr('stroke-opacity', i === 0 ? 0.3 : 0.08)
+                .attr('stroke-width', i === 0 ? 1.5 : 1);
 
             // Horizontalish lines
             const startH = transform(-10, i);
@@ -56,8 +56,8 @@ export default function TransformGrid() {
                 .attr('x1', startH.x).attr('y1', startH.y)
                 .attr('x2', endH.x).attr('y2', endH.y)
                 .attr('stroke', 'var(--color-text)')
-                .attr('stroke-opacity', i === 0 ? 0.2 : 0.05)
-                .attr('stroke-width', i === 0 ? 2 : 1);
+                .attr('stroke-opacity', i === 0 ? 0.3 : 0.08)
+                .attr('stroke-width', i === 0 ? 1.5 : 1);
         });
 
         // Definitions (Arrowheads)
@@ -89,10 +89,14 @@ export default function TransformGrid() {
                     const snapX = Math.round(x * 2) / 2;
                     const snapY = Math.round(y * 2) / 2;
 
+                    // Clamping for safety
+                    const clampedX = Math.max(-5, Math.min(5, snapX));
+                    const clampedY = Math.max(-5, Math.min(5, snapY));
+
                     if (id === 'i') {
-                        setMatrix(m => ({ ...m, a: snapX, c: snapY }));
+                        setMatrix(m => ({ ...m, a: clampedX, c: clampedY }));
                     } else {
-                        setMatrix(m => ({ ...m, b: snapX, d: snapY }));
+                        setMatrix(m => ({ ...m, b: clampedX, d: clampedY }));
                     }
                 });
         };
@@ -106,18 +110,20 @@ export default function TransformGrid() {
             .attr('marker-end', 'url(#arrow-i)');
 
         g.append('circle')
-            .attr('cx', iHead.x).attr('cy', iHead.y).attr('r', 12)
-            .attr('fill', 'var(--color-success)').attr('fill-opacity', 0.1)
+            .attr('cx', iHead.x).attr('cy', iHead.y).attr('r', 10)
+            .attr('fill', 'var(--color-success)').attr('fill-opacity', 0.2)
             .attr('stroke', 'var(--color-success)')
+            .attr('stroke-width', 2)
             .style('cursor', 'grab')
             .call(setupDrag('i') as any);
 
         // Label for i
         g.append('text')
-            .attr('x', iHead.x + 10).attr('y', iHead.y - 10)
+            .attr('x', iHead.x + 12).attr('y', iHead.y - 12)
             .attr('fill', 'var(--color-success)')
             .attr('font-family', 'var(--font-math)')
-            .attr('font-size', '14px')
+            .attr('font-size', '18px')
+            .attr('font-weight', 'bold')
             .text('î');
 
         // Basis j (Blue/Purple)
@@ -129,38 +135,40 @@ export default function TransformGrid() {
             .attr('marker-end', 'url(#arrow-j)');
 
         g.append('circle')
-            .attr('cx', jHead.x).attr('cy', jHead.y).attr('r', 12)
-            .attr('fill', 'var(--color-secondary)').attr('fill-opacity', 0.1)
+            .attr('cx', jHead.x).attr('cy', jHead.y).attr('r', 10)
+            .attr('fill', 'var(--color-secondary)').attr('fill-opacity', 0.2)
             .attr('stroke', 'var(--color-secondary)')
+            .attr('stroke-width', 2)
             .style('cursor', 'grab')
             .call(setupDrag('j') as any);
 
         // Label for j
         g.append('text')
-            .attr('x', jHead.x + 10).attr('y', jHead.y - 10)
+            .attr('x', jHead.x + 12).attr('y', jHead.y - 12)
             .attr('fill', 'var(--color-secondary)')
             .attr('font-family', 'var(--font-math)')
-            .attr('font-size', '14px')
+            .attr('font-size', '18px')
+            .attr('font-weight', 'bold')
             .text('ĵ');
 
     }, [matrix, width, scale, centerX, centerY]);
 
     return (
-        <div ref={containerRef} className="w-full h-full flex flex-col items-center justify-center p-6 gap-6">
-            <div className="relative w-full border border-glass-border rounded-2xl overflow-hidden bg-glass-bg shadow-inner">
-                <svg ref={svgRef} width={width} height={height} className="block" />
+        <div ref={containerRef} className="w-full h-full flex flex-col items-center justify-start p-4 gap-4">
+            <div className="relative w-full aspect-square border border-glass-border rounded-3xl overflow-hidden bg-glass-bg/30 shadow-inner group">
+                <svg ref={svgRef} width={width} height={height} className="block mx-auto" />
 
                 {/* Matrix Overlay */}
-                <div className="absolute top-4 left-4 glass-panel p-4 font-mono z-10 pointer-events-none border border-glass-border">
-                    <div className="text-xs text-text-dim mb-2 uppercase tracking-tight">Transformation Matrix</div>
-                    <div className="flex items-center gap-3">
-                        <div className="flex flex-col border-l-2 border-r-2 border-glass-border px-3 py-1">
-                            <span className="text-success font-bold">{matrix.a.toFixed(1)}</span>
-                            <span className="text-success font-bold">{matrix.c.toFixed(1)}</span>
+                <div className="absolute top-4 left-4 glass-panel p-4 font-mono z-10 pointer-events-none border border-glass-border shadow-lg">
+                    <div className="text-[10px] text-text-dim mb-3 uppercase tracking-widest font-bold">Transformation Machine</div>
+                    <div className="flex items-center gap-4">
+                        <div className="flex flex-col border-l-2 border-r-2 border-success/30 px-3 py-1 bg-success/5 rounded-sm">
+                            <span className="text-success font-bold text-lg">{matrix.a.toFixed(1)}</span>
+                            <span className="text-success font-bold text-lg">{matrix.c.toFixed(1)}</span>
                         </div>
-                        <div className="flex flex-col border-l-2 border-r-2 border-glass-border px-3 py-1">
-                            <span className="text-secondary font-bold">{matrix.b.toFixed(1)}</span>
-                            <span className="text-secondary font-bold">{matrix.d.toFixed(1)}</span>
+                        <div className="flex flex-col border-l-2 border-r-2 border-secondary/30 px-3 py-1 bg-secondary/5 rounded-sm">
+                            <span className="text-secondary font-bold text-lg">{matrix.b.toFixed(1)}</span>
+                            <span className="text-secondary font-bold text-lg">{matrix.d.toFixed(1)}</span>
                         </div>
                     </div>
                 </div>
@@ -168,7 +176,7 @@ export default function TransformGrid() {
                 <div className="absolute bottom-4 right-4 flex gap-2">
                     <button
                         onClick={() => setMatrix({ a: 1, c: 0, b: 0, d: 1 })}
-                        className="text-xs bg-glass-bg border border-glass-border px-3 py-1.5 rounded-full hover:bg-white/10 transition-colors"
+                        className="text-[10px] font-bold uppercase tracking-wider bg-color-background/50 backdrop-blur-md border border-glass-border px-4 py-2 rounded-full hover:bg-white/20 transition-all active:scale-95 shadow-sm"
                     >
                         Reset Identity
                     </button>

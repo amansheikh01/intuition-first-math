@@ -12,9 +12,9 @@ function StabilitySandbox() {
     const [angle, setAngle] = useState(90);
     const [noise, setNoise] = useState(0);
 
-    const width = containerWidth || 600;
-    const height = 300;
-    const scale = useMemo(() => Math.min(width, height) / 10, [width, height]);
+    const width = containerWidth || 500;
+    const height = width; // Maintain square 1:1 
+    const scale = useMemo(() => width / 15, [width]);
     const centerX = width / 2;
     const centerY = height / 2;
 
@@ -45,8 +45,8 @@ function StabilitySandbox() {
         // Draw Reference Grid
         const range = D3.range(-15, 16).map(i => i * scale);
         g.selectAll('line.grid-v').data(range).enter().append('line')
-            .attr('x1', (d: number) => d).attr('y1', -height).attr('x2', (d: number) => d).attr('y2', height)
-            .attr('stroke', 'var(--color-text)').attr('stroke-opacity', 0.05);
+            .attr('x1', (d: number) => d).attr('y1', -height / 2).attr('x2', (d: number) => d).attr('y2', height / 2)
+            .attr('stroke', 'var(--color-text)').attr('stroke-opacity', 0.08);
 
         // Ideal lines
         const baseAngle = -15;
@@ -86,33 +86,37 @@ function StabilitySandbox() {
     }, [angle, noise, width, scale, centerX, centerY]);
 
     return (
-        <div ref={containerRef} className="w-full h-full flex flex-col items-center justify-center p-6 gap-8">
-            <div className="relative w-full aspect-[2/1] border border-glass-border rounded-2xl overflow-hidden bg-glass-bg shadow-inner">
-                <svg ref={svgRef} width={width} height={height} className="block" />
+        <div ref={containerRef} className="w-full h-full flex flex-col items-center justify-start p-4 gap-4">
+            <div className="relative w-full aspect-square border border-glass-border rounded-3xl overflow-hidden bg-glass-bg/30 shadow-inner group">
+                <svg ref={svgRef} width={width} height={height} className="block mx-auto" />
 
-                <div className="absolute top-6 right-6 text-xs text-text-dim text-right bg-glass-bg/50 px-3 py-2 rounded-full backdrop-blur-sm border border-glass-border">
-                    Observe how <span className="text-accent font-bold">Uncertainty</span> explodes near 0°
+                <div className="absolute top-4 right-4 text-[10px] uppercase font-bold tracking-tighter text-text-dim bg-glass-bg/80 px-3 py-1.5 rounded-full backdrop-blur-md border border-glass-border shadow-sm">
+                    Stability Analysis
                 </div>
             </div>
 
-            <div className="w-full max-w-xl grid grid-cols-1 md:grid-cols-2 gap-8 p-6 glass-panel border border-glass-border">
+            <div className="w-full max-w-sm grid grid-cols-1 gap-6 p-6 glass-panel border border-glass-border shadow-sm">
                 <div className="space-y-4">
-                    <label className="text-[10px] uppercase tracking-widest text-text-dim block">Intersection Angle</label>
+                    <div className="flex justify-between items-center mb-1">
+                        <label className="text-[10px] uppercase tracking-widest text-text-dim font-bold">Intersection Angle</label>
+                        <span className="text-xs font-mono font-bold text-primary bg-primary/10 px-2 py-0.5 rounded">{angle}°</span>
+                    </div>
                     <input
                         type="range" min="2" max="90" value={angle}
                         onChange={e => setAngle(Number(e.target.value))}
                         className="w-full accent-primary"
                     />
-                    <div className="text-right text-sm font-mono text-primary font-bold">{angle}°</div>
                 </div>
                 <div className="space-y-4">
-                    <label className="text-[10px] uppercase tracking-widest text-text-dim block">Measurement Noise</label>
+                    <div className="flex justify-between items-center mb-1">
+                        <label className="text-[10px] uppercase tracking-widest text-text-dim font-bold">Measurement Noise</label>
+                        <span className="text-xs font-mono font-bold text-accent bg-accent/10 px-2 py-0.5 rounded">±{noise} units</span>
+                    </div>
                     <input
                         type="range" min="0" max="2" step="0.1" value={noise}
                         onChange={e => setNoise(Number(e.target.value))}
                         className="w-full accent-accent"
                     />
-                    <div className="text-right text-sm font-mono text-accent font-bold">±{noise} units</div>
                 </div>
             </div>
         </div>

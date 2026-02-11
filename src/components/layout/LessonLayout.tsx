@@ -31,15 +31,15 @@ export default function LessonLayout({ title, subtitle, children, visual }: Less
       </nav>
 
       {/* Main Content */}
-      <main className="flex flex-col lg:flex-row pt-28 min-h-screen px-4 md:px-8 gap-8">
+      <main className="flex flex-col lg:flex-row pt-28 min-h-screen px-4 md:px-8 gap-8 max-w-[1600px] mx-auto w-full">
 
         {/* Left: Narrative Scroll */}
-        <div className="w-full lg:w-1/2 min-h-screen flex flex-col pt-8 pb-32 max-w-2xl mx-auto lg:mx-0">
-          <header className="mb-12 text-center lg:text-left">
+        <div className="w-full lg:w-3/5 min-h-screen flex flex-col pt-8 pb-32">
+          <header className="mb-12 text-left">
             <motion.h1
               initial={{ y: 10, opacity: 0 }}
               animate={{ y: 0, opacity: 1 }}
-              className="text-4xl md:text-5xl lg:text-6xl font-bold mb-4 tracking-tighter"
+              className="text-4xl md:text-5xl lg:text-6xl font-bold mb-4 tracking-tighter text-color-text"
             >
               {title}
             </motion.h1>
@@ -48,34 +48,38 @@ export default function LessonLayout({ title, subtitle, children, visual }: Less
                 initial={{ y: 10, opacity: 0 }}
                 animate={{ y: 0, opacity: 1 }}
                 transition={{ delay: 0.1 }}
-                className="text-lg md:text-xl text-text-dim"
+                className="text-lg md:text-xl text-text-dim max-w-xl"
               >
                 {subtitle}
               </motion.p>
             )}
           </header>
 
-          <div className="prose prose-invert prose-lg max-w-none 
+          <div className="prose prose-slate prose-lg max-w-none dark:prose-invert
             prose-headings:text-color-text prose-headings:font-heading prose-headings:tracking-tight
-            prose-p:text-text-dim prose-p:leading-relaxed
+            prose-p:text-text-dim prose-p:leading-relaxed prose-p:mb-6
             prose-strong:text-color-text prose-strong:font-bold
-            prose-code:text-primary prose-code:bg-primary/5 prose-code:px-1 prose-code:rounded
+            prose-code:text-primary prose-code:bg-primary/5 prose-code:px-1 prose-code:rounded prose-code:before:content-none prose-code:after:content-none
+            prose-ul:text-text-dim prose-ol:text-text-dim
+            prose-li:my-1
           ">
             {children}
           </div>
 
           {/* Footer Navigation */}
           <div className="mt-auto pt-12 border-t border-glass-border">
-            <Link href="/" className="inline-flex items-center gap-2 text-sm text-primary hover:gap-3 transition-all font-bold">
-              <ArrowLeft className="w-4 h-4" /> Back to Library
+            <Link href="/" className="inline-flex items-center gap-2 text-sm text-primary hover:gap-3 transition-all font-bold group">
+              <ArrowLeft className="w-4 h-4 transition-transform group-hover:-translate-x-1" /> Back to Library
             </Link>
           </div>
         </div>
 
-        {/* Right: Sticky Visualization */}
-        <div className="hidden lg:block w-1/2 h-[calc(100vh-10rem)] sticky top-28">
-          <div className="w-full h-full glass-panel overflow-hidden relative shadow-2xl shadow-primary/5 border border-glass-border rounded-3xl">
-            {visual}
+        {/* Right: Sticky Visualization - Professional Fixed Size Square */}
+        <div className="hidden lg:flex w-full lg:w-2/5 justify-center items-start pt-8 pb-32 sticky top-28 h-[calc(100vh-10rem)]">
+          <div className="w-full max-w-[500px] aspect-square glass-panel overflow-hidden relative shadow-2xl shadow-primary/5 border border-glass-border rounded-3xl flex items-center justify-center bg-glass-bg">
+            <div className="w-full h-full relative">
+              {visual}
+            </div>
           </div>
         </div>
       </main>
