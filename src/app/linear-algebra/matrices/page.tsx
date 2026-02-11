@@ -3,6 +3,7 @@
 import React from 'react';
 import LessonLayout from '@/components/layout/LessonLayout';
 import TransformGrid from '@/components/viz/LinearAlgebra/TransformGrid';
+import Latex from '@/components/ui/Latex';
 
 export default function MatricesPage() {
     return (
@@ -33,11 +34,11 @@ export default function MatricesPage() {
                 <ul className="list-disc pl-6 space-y-4 mt-6">
                     <li>
                         <span className="text-success font-bold">î (Green)</span>:
-                        The vector that originally points to $$[1, 0]$$.
+                        The vector that originally points to <Latex formula="[1, 0]" />.
                     </li>
                     <li>
                         <span className="text-secondary font-bold">ĵ (Purple)</span>:
-                        The vector that originally points to $$[0, 1]$$.
+                        The vector that originally points to <Latex formula="[0, 1]" />.
                     </li>
                 </ul>
                 <p className="mt-6">
@@ -68,7 +69,7 @@ export default function MatricesPage() {
                         The Determinant Squeeze
                     </h3>
                     <p className="text-sm text-text-dim">
-                        Try making the arrows parallel (e.g. both pointing at $$[1,1]$$).
+                        Try making the arrows parallel (e.g. both pointing at <Latex formula="[1,1]" />).
                         The grid collapses into a single line. The <strong>area</strong> of the squares becomes zero.
                         This is what it means for a matrix to be non-invertible!
                     </p>

@@ -12,14 +12,14 @@ export default function TransformGrid() {
     const [isDragging, setIsDragging] = useState<string | null>(null);
 
     // Constants
-    const width = containerWidth || 500;
-    const height = width; // Maintain square 1:1
-    const scale = useMemo(() => width / 12, [width]);
+    const width = 500;
+    const height = 500;
+    const scale = width / 10; // 5 units each way
     const centerX = width / 2;
     const centerY = height / 2;
 
     useEffect(() => {
-        if (!svgRef.current || width === 0) return;
+        if (!svgRef.current) return;
 
         const svg = D3.select(svgRef.current);
         svg.selectAll('*').remove();
@@ -151,7 +151,7 @@ export default function TransformGrid() {
             .attr('font-weight', 'bold')
             .text('ĵ');
 
-    }, [matrix, width, scale, centerX, centerY]);
+    }, [matrix]);
 
     return (
         <div ref={containerRef} className="w-full h-full flex flex-col items-center justify-start p-4 gap-4">

@@ -3,6 +3,7 @@
 import React from 'react';
 import LessonLayout from '@/components/layout/LessonLayout';
 import VectorSandbox from '@/components/viz/Vectors/VectorSandBox';
+import Latex from '@/components/ui/Latex';
 
 export default function VectorsPage() {
     return (
@@ -14,7 +15,7 @@ export default function VectorsPage() {
             <section className="mb-12">
                 <h2>The Point vs. The Arrow</h2>
                 <p>
-                    In traditional school math, we focus on <strong>points</strong>—fixed locations like $$(3, 2)$$ that sit frozen on a graph.
+                    In traditional school math, we focus on <strong>points</strong>—fixed locations like <Latex formula="(3, 2)" /> that sit frozen on a graph.
                     This is fine for maps, but life isn&apos;t static.
                 </p>
                 <div className="glass-panel p-6 my-8 border-l-4 border-primary">
@@ -54,11 +55,11 @@ export default function VectorsPage() {
                 <div className="space-y-4 mt-8">
                     <div className="flex gap-4 items-start">
                         <div className="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center shrink-0 text-primary font-bold">1</div>
-                        <p>Watch the <strong>components</strong> $$(x, y)$$ change. They tell you the "recipe" for the movement.</p>
+                        <p>Watch the <strong>components</strong> <Latex formula="(x, y)" /> change. They tell you the "recipe" for the movement.</p>
                     </div>
                     <div className="flex gap-4 items-start">
                         <div className="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center shrink-0 text-primary font-bold">2</div>
-                        <p>Notice the <strong>magnitude</strong> $$|v|$$. It follows the Pythagorean theorem: $$x^2 + y^2 = |v|^2$$.</p>
+                        <p>Notice the <strong>magnitude</strong> <Latex formula="|v|" />. It follows the Pythagorean theorem: <Latex formula="x^2 + y^2 = |v|^2" />.</p>
                     </div>
                 </div>
 

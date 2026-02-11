@@ -5,6 +5,7 @@ import * as D3 from 'd3';
 import LessonLayout from '@/components/layout/LessonLayout';
 
 import useMeasure from 'react-use-measure';
+import Latex from '@/components/ui/Latex';
 
 function EigenHunter() {
     const [containerRef, { width: containerWidth }] = useMeasure();
@@ -20,14 +21,14 @@ function EigenHunter() {
         y: matrix.c * v.x + matrix.d * v.y
     });
 
-    const width = containerWidth || 500;
-    const height = width; // Maintain square 1:1
-    const scale = useMemo(() => width / 12, [width]);
+    const width = 500;
+    const height = 500;
+    const scale = width / 12;
     const centerX = width / 2;
     const centerY = height / 2;
 
     useEffect(() => {
-        if (!svgRef.current || width === 0) return;
+        if (!svgRef.current) return;
         const svg = D3.select(svgRef.current);
         svg.selectAll('*').remove();
 
@@ -118,7 +119,7 @@ function EigenHunter() {
             .style('cursor', 'grab')
             .call(drag as any);
 
-    }, [probeAngle, matrix, width, scale, centerX, centerY]);
+    }, [probeAngle, matrix]);
 
     return (
         <div ref={containerRef} className="w-full h-full flex flex-col items-center justify-start p-4 gap-4">
@@ -177,7 +178,7 @@ export default function EigenvaluesPage() {
                 <div className="glass-panel p-4 my-4 border-l-4 border-success">
                     <h3 className="text-lg font-bold">Try It</h3>
                     <p>Drag the probe around the circle. Can you find the two hidden directions where the arrows align?</p>
-                    <p className="text-sm mt-2 text-text-dim">Hint: Look at 45° ($$[1,1]$$) and 135°.</p>
+                    <p className="text-sm mt-2 text-text-dim">Hint: Look at <Latex formula="45^\circ" /> (<Latex formula="[1,1]" />) and <Latex formula="135^\circ" />.</p>
                 </div>
             </section>
         </LessonLayout>

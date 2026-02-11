@@ -5,6 +5,7 @@ import * as D3 from 'd3';
 import LessonLayout from '@/components/layout/LessonLayout';
 
 import useMeasure from 'react-use-measure';
+import Latex from '@/components/ui/Latex';
 
 function StabilitySandbox() {
     const [containerRef, { width: containerWidth }] = useMeasure();
@@ -12,14 +13,14 @@ function StabilitySandbox() {
     const [angle, setAngle] = useState(90);
     const [noise, setNoise] = useState(0);
 
-    const width = containerWidth || 500;
-    const height = width; // Maintain square 1:1 
-    const scale = useMemo(() => width / 15, [width]);
+    const width = 500;
+    const height = 500;
+    const scale = width / 15;
     const centerX = width / 2;
     const centerY = height / 2;
 
     useEffect(() => {
-        if (!svgRef.current || width === 0) return;
+        if (!svgRef.current) return;
         const svg = D3.select(svgRef.current);
         svg.selectAll('*').remove();
 
@@ -83,7 +84,7 @@ function StabilitySandbox() {
             .attr('cx', intersectX * scale).attr('cy', -intersectY * scale)
             .attr('r', 6).attr('fill', 'var(--color-text)').attr('stroke', 'var(--color-background)').attr('stroke-width', 2);
 
-    }, [angle, noise, width, scale, centerX, centerY]);
+    }, [angle, noise]);
 
     return (
         <div ref={containerRef} className="w-full h-full flex flex-col items-center justify-start p-4 gap-4">

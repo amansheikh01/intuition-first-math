@@ -12,14 +12,14 @@ export default function VectorSandbox() {
   const [isDragging, setIsDragging] = useState(false);
 
   // Constants
-  const width = containerWidth || 500;
-  const height = width; // Maintain square 1:1
-  const scale = useMemo(() => width / 12, [width]);
+  const width = 500;
+  const height = 500;
+  const scale = width / 12;
   const centerX = width / 2;
   const centerY = height / 2;
 
   useEffect(() => {
-    if (!svgRef.current || width === 0) return;
+    if (!svgRef.current) return;
 
     const svg = D3.select(svgRef.current);
     svg.selectAll('*').remove();
@@ -139,7 +139,7 @@ export default function VectorSandbox() {
 
     if (isDragging) handle.attr('cursor', 'grabbing');
 
-  }, [position, isDragging, width, scale, centerX, centerY]);
+  }, [position, isDragging]);
 
   return (
     <div ref={containerRef} className="w-full h-full flex flex-col items-center justify-start p-4 gap-4">

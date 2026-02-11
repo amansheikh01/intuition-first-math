@@ -31,44 +31,36 @@ export default function LessonLayout({ title, subtitle, children, visual }: Less
       </nav>
 
       {/* Main Content */}
-      <main className="flex flex-col lg:flex-row pt-28 min-h-screen px-4 md:px-8 gap-8 max-w-[1600px] mx-auto w-full">
+      <main className="flex flex-col lg:flex-row pt-28 min-h-screen px-4 md:px-8 gap-12 max-w-[1600px] mx-auto w-full">
 
         {/* Left: Narrative Scroll */}
         <div className="w-full lg:w-3/5 min-h-screen flex flex-col pt-8 pb-32">
-          <header className="mb-12 text-left">
-            <motion.h1
-              initial={{ y: 10, opacity: 0 }}
-              animate={{ y: 0, opacity: 1 }}
-              className="text-4xl md:text-5xl lg:text-6xl font-bold mb-4 tracking-tighter text-color-text"
-            >
+          <header className="mb-16 text-center">
+            <h1 className="text-4xl md:text-5xl lg:text-7xl font-bold mb-6 tracking-tighter text-color-text">
               {title}
-            </motion.h1>
+            </h1>
             {subtitle && (
-              <motion.p
-                initial={{ y: 10, opacity: 0 }}
-                animate={{ y: 0, opacity: 1 }}
-                transition={{ delay: 0.1 }}
-                className="text-lg md:text-xl text-text-dim max-w-xl"
-              >
+              <p className="text-lg md:text-xl text-text-dim max-w-2xl mx-auto">
                 {subtitle}
-              </motion.p>
+              </p>
             )}
           </header>
 
           <div className="prose prose-slate prose-lg max-w-none dark:prose-invert
-            prose-headings:text-color-text prose-headings:font-heading prose-headings:tracking-tight
-            prose-p:text-text-dim prose-p:leading-relaxed prose-p:mb-6
+            prose-headings:text-color-text prose-headings:font-heading prose-headings:tracking-tight prose-headings:text-center
+            prose-p:text-text-dim prose-p:leading-relaxed prose-p:mb-8 prose-p:text-center
             prose-strong:text-color-text prose-strong:font-bold
             prose-code:text-primary prose-code:bg-primary/5 prose-code:px-1 prose-code:rounded prose-code:before:content-none prose-code:after:content-none
             prose-ul:text-text-dim prose-ol:text-text-dim
             prose-li:my-1
+            max-w-3xl mx-auto
           ">
             {children}
           </div>
 
           {/* Footer Navigation */}
-          <div className="mt-auto pt-12 border-t border-glass-border">
-            <Link href="/" className="inline-flex items-center gap-2 text-sm text-primary hover:gap-3 transition-all font-bold group">
+          <div className="mt-auto pt-12 border-t border-glass-border flex justify-center">
+            <Link href="/" className="inline-flex items-center gap-2 text-sm text-primary transition-all font-bold group">
               <ArrowLeft className="w-4 h-4 transition-transform group-hover:-translate-x-1" /> Back to Library
             </Link>
           </div>
@@ -76,7 +68,7 @@ export default function LessonLayout({ title, subtitle, children, visual }: Less
 
         {/* Right: Sticky Visualization - Professional Fixed Size Square */}
         <div className="hidden lg:flex w-full lg:w-2/5 justify-center items-start pt-8 pb-32 sticky top-28 h-[calc(100vh-10rem)]">
-          <div className="w-full max-w-[500px] aspect-square glass-panel overflow-hidden relative shadow-2xl shadow-primary/5 border border-glass-border rounded-3xl flex items-center justify-center bg-glass-bg">
+          <div className="w-full max-w-[500px] aspect-square glass-panel overflow-hidden relative border border-secondary/20 rounded-3xl flex items-center justify-center bg-glass-bg shadow-xl">
             <div className="w-full h-full relative">
               {visual}
             </div>
