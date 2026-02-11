@@ -1,44 +1,53 @@
 'use client';
 
-import React, { useRef, useState, useEffect } from 'react';
+import React, { useRef, useState, useEffect, useMemo } from 'react';
 import * as D3 from 'd3';
 import LessonLayout from '@/components/layout/LessonLayout';
 
+import useMeasure from 'react-use-measure';
+
 function EigenHunter() {
+    const [containerRef, { width: containerWidth }] = useMeasure();
     const svgRef = useRef<SVGSVGElement>(null);
     const [probeAngle, setProbeAngle] = useState(0);
     const [isEigen, setIsEigen] = useState(false);
 
-    // Matrix A = [[2, 1], [0, 0.5]] (Example with real logic below)
-    // Let's use a symmetric matrix for real eigenvalues: [[2, 1], [1, 2]] -> Eigenvalues 3, 1. Vectors [1,1], [-1,1] (45 deg and 135 deg)
+    // Matrix A = [[2, 1], [1, 2]] 
     const matrix = { a: 2, b: 1, c: 1, d: 2 };
 
-    // Helper: Apply Matrix to Vector
     const transform = (v: { x: number, y: number }) => ({
         x: matrix.a * v.x + matrix.b * v.y,
         y: matrix.c * v.x + matrix.d * v.y
     });
 
-    const width = 600;
+    const width = containerWidth || 600;
     const height = 400;
-    const scale = 50;
+    const scale = useMemo(() => Math.min(width, height) / 10, [width, height]);
     const centerX = width / 2;
     const centerY = height / 2;
 
     useEffect(() => {
-        if (!svgRef.current) return;
+        if (!svgRef.current || width === 0) return;
         const svg = D3.select(svgRef.current);
         svg.selectAll('*').remove();
 
         const g = svg.append('g').attr('transform', `translate(${centerX}, ${centerY})`);
 
-        // Draw Coordinate System
-        g.append('line').attr('x1', -width / 2).attr('x2', width / 2).attr('stroke', '#fff').attr('stroke-opacity', 0.1);
-        g.append('line').attr('y1', -height / 2).attr('y2', height / 2).attr('stroke', '#fff').attr('stroke-opacity', 0.1);
+        // Coordinate Grid
+        const range = D3.range(-10, 11).map(i => i * scale);
+        g.selectAll('line.grid')
+            .data(range).enter()
+            .append('line')
+            .attr('x1', d => d).attr('y1', -height).attr('x2', d => d).attr('y2', height)
+            .attr('stroke', 'var(--color-text)').attr('stroke-opacity', 0.05);
+        g.selectAll('line.grid-h')
+            .data(range).enter()
+            .append('line')
+            .attr('x1', -width).attr('y1', d => d).attr('x2', width).attr('y2', d => d)
+            .attr('stroke', 'var(--color-text)').attr('stroke-opacity', 0.05);
 
-        // Draw the "Circle" (Transformed) represents the new space
-        // We visualize transformation by sampling points on unit circle
-        const circlePoints = D3.range(0, 2 * Math.PI, 0.1).map(angle => {
+        // Transformed Circle (The Transformation Profile)
+        const circlePoints = D3.range(0, 2 * Math.PI, 0.05).map(angle => {
             const v = { x: Math.cos(angle), y: Math.sin(angle) };
             const t = transform(v);
             return t;
@@ -46,54 +55,53 @@ function EigenHunter() {
 
         const lineGen = D3.line<{ x: number, y: number }>()
             .x(d => d.x * scale)
-            .y(d => -d.y * scale) // Invert Y
+            .y(d => -d.y * scale)
             .curve(D3.curveLinearClosed);
 
         g.append('path')
             .datum(circlePoints)
             .attr('d', lineGen)
-            .attr('fill', 'none')
-            .attr('stroke', '#ffffff')
-            .attr('stroke-opacity', 0.2)
+            .attr('fill', 'var(--color-primary)')
+            .attr('fill-opacity', 0.05)
+            .attr('stroke', 'var(--color-text)')
+            .attr('stroke-opacity', 0.1)
             .attr('stroke-dasharray', '4 4');
 
-        // Probe Vector (Input)
+        // Logic
         const px = Math.cos(probeAngle);
         const py = Math.sin(probeAngle);
-
-        // Result Vector (Output)
         const res = transform({ x: px, y: py });
 
-        // Check Collinearity using Cross Product (2D)
-        // v x w = vx*wy - vy*wx. If close to 0, they are aligned.
-        const crossProduct = px * res.y - py * res.x;
-        const aligned = Math.abs(crossProduct) < 0.1;
+        // Normalizing result for comparison
+        const resMag = Math.sqrt(res.x ** 2 + res.y ** 2);
+        const crossProduct = px * (res.y / resMag) - py * (res.x / resMag);
+        const aligned = Math.abs(crossProduct) < 0.05;
         setIsEigen(aligned);
 
-        const probeColor = aligned ? '#00ff9d' : '#ff0055';
+        const probeColor = aligned ? 'var(--color-success)' : 'var(--color-accent)';
+
+        // Draw Result (Action)
+        g.append('line')
+            .attr('x1', 0).attr('y1', 0)
+            .attr('x2', res.x * scale).attr('y2', -res.y * scale)
+            .attr('stroke', 'var(--color-text)').attr('stroke-width', 2).attr('stroke-opacity', 0.3)
+            .attr('marker-end', `url(#arrow-res)`);
 
         // Draw Probe (Input)
         g.append('line')
             .attr('x1', 0).attr('y1', 0)
-            .attr('x2', px * scale * 1.5).attr('y2', -py * scale * 1.5)
-            .attr('stroke', probeColor).attr('stroke-width', 3)
+            .attr('x2', px * scale * 2).attr('y2', -py * scale * 2)
+            .attr('stroke', probeColor).attr('stroke-width', 4)
             .attr('marker-end', `url(#arrow-probe)`);
 
-        // Draw Result (Output) - Ghosted
-        g.append('line')
-            .attr('x1', 0).attr('y1', 0)
-            .attr('x2', res.x * scale).attr('y2', -res.y * scale)
-            .attr('stroke', '#ffffff').attr('stroke-width', 2).attr('stroke-opacity', 0.5)
-            .attr('marker-end', `url(#arrow-res)`);
-
-        // Define Markers
+        // Markers
         const defs = svg.append('defs');
         defs.append('marker').attr('id', 'arrow-probe').attr('viewBox', '0 -5 10 10').attr('refX', 8).attr('markerWidth', 6).attr('markerHeight', 6).attr('orient', 'auto')
             .append('path').attr('d', 'M0,-5L10,0L0,5').attr('fill', probeColor);
         defs.append('marker').attr('id', 'arrow-res').attr('viewBox', '0 -5 10 10').attr('refX', 8).attr('markerWidth', 6).attr('markerHeight', 6).attr('orient', 'auto')
-            .append('path').attr('d', 'M0,-5L10,0L0,5').attr('fill', '#ffffff');
+            .append('path').attr('d', 'M0,-5L10,0L0,5').attr('fill', 'var(--color-text)');
 
-        // Interaction Overlay
+        // Interaction
         const drag = D3.drag<SVGCircleElement, unknown>()
             .on('drag', (event) => {
                 const angle = Math.atan2(-(event.y - centerY), event.x - centerX);
@@ -101,23 +109,36 @@ function EigenHunter() {
             });
 
         g.append('circle')
-            .attr('cx', px * scale * 1.5).attr('cy', -py * scale * 1.5)
-            .attr('r', 15)
+            .attr('cx', px * scale * 2).attr('cy', -py * scale * 2)
+            .attr('r', 20)
             .attr('fill', 'transparent')
             .style('cursor', 'grab')
             .call(drag as any);
 
-    }, [probeAngle, matrix]);
+    }, [probeAngle, matrix, width, scale, centerX, centerY]);
 
     return (
-        <div className="w-full h-full flex flex-col items-center justify-center relative">
-            <svg ref={svgRef} width={600} height={400} className="block border border-white/10 rounded-lg bg-black/20" />
-            <div className={`absolute bottom-4 left-4 glass-panel p-2 text-sm transition-colors ${isEigen ? 'border-success text-success' : 'text-text-dim'}`}>
-                {isEigen ? "EIGENVECTOR FOUND!" : "Keep searching..."}
+        <div ref={containerRef} className="w-full h-full flex flex-col items-center justify-center p-6 gap-6">
+            <div className="relative w-full aspect-[3/2] border border-glass-border rounded-2xl overflow-hidden bg-glass-bg shadow-inner">
+                <svg ref={svgRef} width={width} height={height} className="block" />
+
+                <div className={`absolute bottom-6 left-6 glass-panel py-2 px-4 text-sm font-bold transition-all border-2 ${isEigen ? 'border-success text-success bg-success/5 animate-pulse' : 'border-glass-border text-text-dim'}`}>
+                    {isEigen ? "EIGEN-DIRECTION DETECTED" : "HUNTING FOR AXIS..."}
+                </div>
+
+                <div className="absolute top-6 right-6 text-xs text-text-dim text-right bg-glass-bg/50 px-3 py-2 rounded-full backdrop-blur-sm border border-glass-border">
+                    Drag the <span className="text-accent font-bold">Probe</span> to find stable axes
+                </div>
             </div>
-            <div className="absolute top-4 right-4 text-xs text-text-dim text-right">
-                Drag the colored probe.<br />
-                Align it with the white ghost arrow.
+
+            <div className="w-full max-w-md p-4 glass-panel border border-glass-border text-center">
+                <input
+                    type="range" min="0" max={2 * Math.PI} step="0.01"
+                    value={probeAngle}
+                    onChange={(e) => setProbeAngle(parseFloat(e.target.value))}
+                    className="w-full accent-accent"
+                />
+                <div className="text-[10px] uppercase tracking-widest text-text-dim mt-2">Adjust Probe Angle Manually</div>
             </div>
         </div>
     );

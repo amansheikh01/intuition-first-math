@@ -1,132 +1,118 @@
 'use client';
 
-import React, { useRef, useState, useEffect } from 'react';
+import React, { useRef, useState, useEffect, useMemo } from 'react';
 import * as D3 from 'd3';
 import LessonLayout from '@/components/layout/LessonLayout';
 
-function StabilitySandbox() {
-    const svgRef = useRef<SVGSVGElement>(null);
-    const [angle, setAngle] = useState(90); // Degrees between lines
-    const [noise, setNoise] = useState(0); // Noise Level
+import useMeasure from 'react-use-measure';
 
-    const width = 600;
-    const height = 400;
-    const scale = 40;
+function StabilitySandbox() {
+    const [containerRef, { width: containerWidth }] = useMeasure();
+    const svgRef = useRef<SVGSVGElement>(null);
+    const [angle, setAngle] = useState(90);
+    const [noise, setNoise] = useState(0);
+
+    const width = containerWidth || 600;
+    const height = 300;
+    const scale = useMemo(() => Math.min(width, height) / 10, [width, height]);
     const centerX = width / 2;
     const centerY = height / 2;
 
     useEffect(() => {
-        if (!svgRef.current) return;
+        if (!svgRef.current || width === 0) return;
         const svg = D3.select(svgRef.current);
         svg.selectAll('*').remove();
 
         const g = svg.append('g').attr('transform', `translate(${centerX}, ${centerY})`);
 
-        // Line 1: Fixed Horizontal y = 2 (in math coords) -> y = -2*scale (in svg)
-        // Actually let's make Line 1 y = x for visual symmetry
-        // Line 1: y = x.  Line 2: Rotated by 'angle' relative to Line 1.
-
-        // Let's use intersection at (2, 2)
-        // Line 1 passes through (2, 2) with angle 0 (Horizontal for simplicity)
-        // y = 2.
-
+        // Ideal intersection point
         const intersectX = 2;
         const intersectY = 2;
 
-        const drawLine = (thetaDeg: number, color: string, width: number) => {
+        const drawLine = (thetaDeg: number, color: string, width: number, opacity: number = 1) => {
             const theta = thetaDeg * Math.PI / 180;
-            // Point-Slope: y - y1 = m(x - x1)
-            // m = tan(theta)
-
-            // Find endpoints at x = -10 and x = 10
-            const x1 = -10, x2 = 10;
+            const x1 = -15, x2 = 15;
             const y1 = intersectY + Math.tan(theta) * (x1 - intersectX);
             const y2 = intersectY + Math.tan(theta) * (x2 - intersectX);
 
             g.append('line')
                 .attr('x1', x1 * scale).attr('y1', -y1 * scale)
                 .attr('x2', x2 * scale).attr('y2', -y2 * scale)
-                .attr('stroke', color).attr('stroke-width', width);
+                .attr('stroke', color).attr('stroke-width', width)
+                .attr('stroke-opacity', opacity);
         };
 
-        // Draw "Ideal" Intersection
-        g.append('circle')
-            .attr('cx', intersectX * scale).attr('cy', -intersectY * scale)
-            .attr('r', 4).attr('fill', '#fff');
+        // Draw Reference Grid
+        const range = D3.range(-15, 16).map(i => i * scale);
+        g.selectAll('line.grid-v').data(range).enter().append('line')
+            .attr('x1', (d: number) => d).attr('y1', -height).attr('x2', (d: number) => d).attr('y2', height)
+            .attr('stroke', 'var(--color-text)').attr('stroke-opacity', 0.05);
 
-        // Line 1 (Fixed Horizontal-ish for stability base, let's say -15 deg)
+        // Ideal lines
         const baseAngle = -15;
-        drawLine(baseAngle, '#00f3ff', 2);
-
-        // Line 2 (Variable)
+        drawLine(baseAngle, 'var(--color-primary)', 3);
         const line2Angle = baseAngle + angle;
-        drawLine(line2Angle, '#7000ff', 2);
+        drawLine(line2Angle, 'var(--color-secondary)', 3);
 
-        // Visualize Noise / Uncertainty
-        // We simulate 50 "perturbed" lines 2 and see where they intersect Line 1
+        // Noise Simulation
         if (noise > 0) {
             const points = [];
-            for (let i = 0; i < 50; i++) {
-                const noiseAngle = (Math.random() - 0.5) * noise * 2; // +/- noise
-                const noisyTheta = (line2Angle + noiseAngle) * Math.PI / 180;
-                const baseTheta = baseAngle * Math.PI / 180;
-
-                // Intersection of two lines:
-                // L1: y - Iy = tan(base)(x - Ix)
-                // L2: y - Iy = tan(noisy)(x - Ix) ... wait they intersect at same point if I just pivot.
-                // Instability comes from *Parallel shift* noise usually, or pivoting. 
-                // Let's Pivot Line 2 slightly around a DIFFERENT point (like origin) to show intersection move?
-                // Or shift L2 up/down.
-
-                // Let's Shift Line 2 vertically by noise*random
+            for (let i = 0; i < 40; i++) {
                 const shift = (Math.random() - 0.5) * noise;
-                // L1: y = tan(base)*x + C1
-                // L2: y = tan(line2)*x + C2 + shift
-
-                const m1 = Math.tan(baseTheta);
+                const m1 = Math.tan(baseAngle * Math.PI / 180);
                 const C1 = intersectY - m1 * intersectX;
 
-                const m2 = Math.tan(line2Angle * Math.PI / 180);
+                const m2 = Math.tan((line2Angle + (Math.random() - 0.5) * (noise * 0.5)) * Math.PI / 180);
                 const C2 = intersectY - m2 * intersectX + shift;
 
-                // Solve m1*x + C1 = m2*x + C2
-                // x(m1 - m2) = C2 - C1
                 const ix = (C2 - C1) / (m1 - m2);
                 const iy = m1 * ix + C1;
-
                 points.push({ x: ix, y: iy });
             }
 
-            g.selectAll('.dot')
+            g.selectAll('.noisy-point')
                 .data(points).enter().append('circle')
-                .attr('cx', d => d.x * scale).attr('cy', d => -d.y * scale)
-                .attr('r', 2).attr('fill', '#ff0055').attr('opacity', 0.5);
+                .attr('cx', (d: any) => d.x * scale).attr('cy', (d: any) => -d.y * scale)
+                .attr('r', 3)
+                .attr('fill', 'var(--color-accent)')
+                .attr('fill-opacity', 0.4);
         }
 
-    }, [angle, noise]);
+        // Ideal Point
+        g.append('circle')
+            .attr('cx', intersectX * scale).attr('cy', -intersectY * scale)
+            .attr('r', 6).attr('fill', 'var(--color-text)').attr('stroke', 'var(--color-background)').attr('stroke-width', 2);
+
+    }, [angle, noise, width, scale, centerX, centerY]);
 
     return (
-        <div className="w-full h-full flex flex-col items-center">
-            <svg ref={svgRef} width={600} height={300} className="border border-white/10 rounded-lg bg-black/20" />
+        <div ref={containerRef} className="w-full h-full flex flex-col items-center justify-center p-6 gap-8">
+            <div className="relative w-full aspect-[2/1] border border-glass-border rounded-2xl overflow-hidden bg-glass-bg shadow-inner">
+                <svg ref={svgRef} width={width} height={height} className="block" />
 
-            <div className="flex gap-8 mt-4 w-full px-8">
-                <div className="flex-1">
-                    <label className="block text-xs text-text-dim mb-1">Intersection Angle (Conditioning)</label>
+                <div className="absolute top-6 right-6 text-xs text-text-dim text-right bg-glass-bg/50 px-3 py-2 rounded-full backdrop-blur-sm border border-glass-border">
+                    Observe how <span className="text-accent font-bold">Uncertainty</span> explodes near 0°
+                </div>
+            </div>
+
+            <div className="w-full max-w-xl grid grid-cols-1 md:grid-cols-2 gap-8 p-6 glass-panel border border-glass-border">
+                <div className="space-y-4">
+                    <label className="text-[10px] uppercase tracking-widest text-text-dim block">Intersection Angle</label>
                     <input
-                        type="range" min="1" max="90" value={angle}
+                        type="range" min="2" max="90" value={angle}
                         onChange={e => setAngle(Number(e.target.value))}
                         className="w-full accent-primary"
                     />
-                    <div className="text-right text-xs text-primary">{angle}°</div>
+                    <div className="text-right text-sm font-mono text-primary font-bold">{angle}°</div>
                 </div>
-                <div className="flex-1">
-                    <label className="block text-xs text-text-dim mb-1">Sensor Noise (Input Error)</label>
+                <div className="space-y-4">
+                    <label className="text-[10px] uppercase tracking-widest text-text-dim block">Measurement Noise</label>
                     <input
                         type="range" min="0" max="2" step="0.1" value={noise}
                         onChange={e => setNoise(Number(e.target.value))}
                         className="w-full accent-accent"
                     />
-                    <div className="text-right text-xs text-accent">{noise} units</div>
+                    <div className="text-right text-sm font-mono text-accent font-bold">±{noise} units</div>
                 </div>
             </div>
         </div>
