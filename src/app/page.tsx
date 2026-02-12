@@ -5,7 +5,7 @@ import Link from 'next/link';
 import { motion } from 'framer-motion';
 import Navbar from '@/components/ui/Navbar';
 import { Lightbulb, Shield, Zap } from 'lucide-react';
-import ConstantVisualizer from '@/components/visuals/ConstantVisualizer';
+import PiApproximationVisualizer from '@/components/visuals/PiApproximationVisualizer';
 
 export default function Home() {
   const containerVariants = {
@@ -23,27 +23,6 @@ export default function Home() {
 
   return (
     <div className="min-h-screen flex flex-col relative overflow-hidden">
-      {/* Subtle Background Animated Graph */}
-      <div className="absolute inset-0 pointer-events-none opacity-[0.03] dark:opacity-[0.05]">
-        <svg width="100%" height="100%" xmlns="http://www.w3.org/2000/svg">
-          <defs>
-            <pattern id="grid" width="40" height="40" patternUnits="userSpaceOnUse">
-              <path d="M 40 0 L 0 0 0 40" fill="none" stroke="currentColor" strokeWidth="0.5" />
-            </pattern>
-          </defs>
-          <rect width="100%" height="100%" fill="url(#grid)" />
-          <motion.path
-            d="M0 100 Q 200 50, 400 150 T 800 100"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="2"
-            initial={{ pathLength: 0, opacity: 0 }}
-            animate={{ pathLength: 1, opacity: 1 }}
-            transition={{ duration: 5, repeat: Infinity, ease: "easeInOut" }}
-          />
-        </svg>
-      </div>
-
       <Navbar />
 
       <main className="flex-grow flex flex-col">
@@ -76,14 +55,14 @@ export default function Home() {
               </div>
             </motion.div>
 
-            {/* Right Visual - Constant Showcase */}
+            {/* Right Visual - Pi Approximation */}
             <motion.div
               initial={{ opacity: 0, scale: 0.9 }}
               animate={{ opacity: 1, scale: 1 }}
               transition={{ duration: 1.2, delay: 0.2 }}
               className="flex items-center justify-center lg:justify-end"
             >
-              <ConstantVisualizer />
+              <PiApproximationVisualizer />
             </motion.div>
           </div>
         </section>
