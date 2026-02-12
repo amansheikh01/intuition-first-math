@@ -1,73 +1,131 @@
 'use client';
 
-import React from 'react';
-import LessonLayout from '@/components/layout/LessonLayout';
-import VectorSandbox from '@/components/viz/Vectors/VectorSandBox';
-import Latex from '@/components/ui/Latex';
+import React, { useState } from 'react';
+import LayoutContainer from '@/components/layout/LayoutContainer';
+import GraphContainer from '@/components/viz/GraphContainer';
+import GraphControls, { ControlField } from '@/components/viz/GraphControls';
+import { SectionBlock, MathBlock, ChallengeBox } from '@/components/ui/ContentBlocks';
 
 export default function VectorsPage() {
+    const [vector, setVector] = useState({ x: 3, y: 2 });
+
+    const renderVector = ({ xScale, yScale, g }: any) => {
+        g.selectAll('.vector-line').remove();
+        g.selectAll('.arrowhead').remove();
+
+        const pixelX = xScale(vector.x);
+        const pixelY = yScale(vector.y);
+        const centerX = xScale(0);
+        const centerY = yScale(0);
+
+        // Arrowhead definition
+        const defs = g.append('defs');
+        defs.append('marker')
+            .attr('id', 'arrowhead-red')
+            .attr('viewBox', '0 -5 10 10')
+            .attr('refX', 8)
+            .attr('refY', 0)
+            .attr('markerWidth', 6)
+            .attr('markerHeight', 6)
+            .attr('orient', 'auto')
+            .append('path')
+            .attr('d', 'M0,-5L10,0L0,5')
+            .attr('fill', 'var(--color-primary)');
+
+        g.append('line')
+            .attr('class', 'vector-line')
+            .attr('x1', centerX)
+            .attr('y1', centerY)
+            .attr('x2', pixelX)
+            .attr('y2', pixelY)
+            .attr('stroke', 'var(--color-primary)')
+            .attr('stroke-width', 3)
+            .attr('marker-end', 'url(#arrowhead-red)');
+    };
+
     return (
-        <LessonLayout
-            title="The Arrow of Action"
-            subtitle="How math describes movement in a frozen world."
-            visual={<VectorSandbox />}
+        <LayoutContainer
+            title="The Vector space"
+            description="Developing an intuition for movement, magnitude, and direction in linear systems."
         >
-            <section className="mb-12">
-                <h2>The Point vs. The Arrow</h2>
-                <p>
-                    In traditional school math, we focus on <strong>points</strong>—fixed locations like <Latex formula="(3, 2)" /> that sit frozen on a graph.
-                    This is fine for maps, but life isn&apos;t static.
-                </p>
-                <div className="glass-panel p-6 my-8 border-l-4 border-primary">
-                    <p className="text-xl font-medium text-color-text mb-2 italic">
-                        "A vector is an instruction waiting to happen."
-                    </p>
-                    <p className="text-sm text-text-dim">
-                        It doesn&apos;t say where you are. It says <strong>where to go</strong> and <strong>how fast</strong>.
-                    </p>
-                </div>
-            </section>
+            {/* Middle Section: Interactive Graph */}
+            <div className="w-full flex flex-col lg:flex-row gap-12 justify-center items-start mb-24">
+                <GraphContainer>
+                    {renderVector}
+                </GraphContainer>
 
-            <section className="mb-12">
-                <h2>The "Wind" Intuition</h2>
-                <p>
-                    Imagine you are a pilot. The control tower tells you there is a wind of "30 knots North."
-                    Does it matter where the plane is? No. The wind is the same instruction for everyone:
-                    <span className="text-primary font-bold italic"> "Shift 30 units North."</span>
-                </p>
-                <ul className="list-disc pl-6 space-y-4 mt-6">
-                    <li>
-                        <strong>Magnitude</strong>: The speed (30 knots).
-                        On the graph, this is the <em>length</em> of our arrow.
-                    </li>
-                    <li>
-                        <strong>Direction</strong>: The orientation (North).
-                        On the graph, this is the <em>angle</em>.
-                    </li>
-                </ul>
-            </section>
-
-            <section className="mb-12">
-                <h2>Try It Yourself</h2>
-                <p>
-                    On the right, you have a sandbox. <strong>Grab the tip of the arrow</strong> and stretch the universe.
-                </p>
-                <div className="space-y-4 mt-8">
-                    <div className="flex gap-4 items-start">
-                        <div className="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center shrink-0 text-primary font-bold">1</div>
-                        <p>Watch the <strong>components</strong> <Latex formula="(x, y)" /> change. They tell you the "recipe" for the movement.</p>
+                <GraphControls>
+                    <ControlField
+                        label="X Component"
+                        value={vector.x}
+                        min={-10} max={10} step={1}
+                        onChange={(v) => setVector(prev => ({ ...prev, x: parseFloat(v) }))}
+                    />
+                    <ControlField
+                        label="Y Component"
+                        value={vector.y}
+                        min={-10} max={10} step={1}
+                        onChange={(v) => setVector(prev => ({ ...prev, y: parseFloat(v) }))}
+                    />
+                    <div className="p-6 bg-primary/5 rounded-xl border border-primary/10">
+                        <p className="text-xs font-bold text-muted uppercase tracking-widest mb-2">Properties</p>
+                        <div className="space-y-2">
+                            <div className="flex justify-between text-sm">
+                                <span className="text-muted">Magnitude |v|:</span>
+                                <span className="font-mono font-bold text-primary">
+                                    {Math.sqrt(vector.x ** 2 + vector.y ** 2).toFixed(2)}
+                                </span>
+                            </div>
+                            <div className="flex justify-between text-sm">
+                                <span className="text-muted">Angle θ:</span>
+                                <span className="font-mono font-bold text-primary">
+                                    {(Math.atan2(vector.y, vector.x) * 180 / Math.PI).toFixed(1)}°
+                                </span>
+                            </div>
+                        </div>
                     </div>
-                    <div className="flex gap-4 items-start">
-                        <div className="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center shrink-0 text-primary font-bold">2</div>
-                        <p>Notice the <strong>magnitude</strong> <Latex formula="|v|" />. It follows the Pythagorean theorem: <Latex formula="x^2 + y^2 = |v|^2" />.</p>
-                    </div>
-                </div>
+                </GraphControls>
+            </div>
 
-                <p className="mt-8 p-4 bg-accent/5 rounded-xl border border-accent/20 text-sm italic">
-                    <strong>Challenge:</strong> Can you create a vector with a magnitude of exactly 5?
-                    Look for the "3-4-5" triangle pattern in the sliders below!
+            {/* Bottom Section: Theory & Content */}
+            <SectionBlock title="Introduction to Vectors">
+                <p>
+                    In linear algebra, a vector is more than just a list of numbers. It is a fundamental unit of action—a geometric entity that possesses both magnitude and direction. While we often represent them as arrows on a 2D plane, they serve as the building blocks for high-dimensional data structures.
                 </p>
-            </section>
-        </LessonLayout>
+                <p>
+                    A vector <span className="italic">v</span> in <span className="italic">R²</span> is defined by its components along the horizontal (x) and vertical (y) axes.
+                </p>
+            </SectionBlock>
+
+            <MathBlock
+                formula="v = \begin{bmatrix} x \\ y \end{bmatrix}"
+                caption="Standard column vector notation in 2D space."
+            />
+
+            <SectionBlock title="Magnitude and Direction">
+                <p>
+                    The length of the vector, known as its **magnitude**, is calculated using the Euclidean norm. This relationship is derived directly from the Pythagorean theorem.
+                </p>
+                <p>
+                    Use the controls above to change the vector's components and watch how the magnitude updates in real-time.
+                </p>
+            </SectionBlock>
+
+            <MathBlock
+                formula="\|v\| = \sqrt{x^2 + y^2}"
+                caption="The Euclidean norm (magnitude) of a 2D vector."
+            />
+
+            <ChallengeBox>
+                Can you find three different pairs of integer components (x, y) that result in a magnitude of exactly 5?
+                (Hint: Look for Pythagorean triples like 3-4-5).
+            </ChallengeBox>
+
+            <SectionBlock title="Why it Matters">
+                <p>
+                    In data science, vectors represent individual observations. In physics, they represent forces. In computer graphics, they define the orientation and movement of characters. Understanding them intuitively is the first step toward mastering Linear Algebra.
+                </p>
+            </SectionBlock>
+        </LayoutContainer>
     );
 }

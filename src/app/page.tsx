@@ -1,78 +1,136 @@
 'use client';
 
 import React from 'react';
-import { Grid, PieChart, Activity } from 'lucide-react';
+import {
+  Activity,
+  BarChart,
+  Grid,
+  PieChart,
+  TrendingUp,
+  Sigma,
+  Layers,
+  Microscope,
+  FlaskConical
+} from 'lucide-react';
 import ThemeToggle from '@/components/ui/ThemeToggle';
-import ModuleCard from '@/components/ui/ModuleCard';
+import SubjectCard from '@/components/ui/SubjectCard';
 
-const modules = [
+const subjects = [
+  {
+    id: 'descriptive-statistics',
+    title: 'Descriptive Statistics',
+    desc: 'Summarizing and visualizing data patterns.',
+    icon: BarChart,
+    href: '/statistics/descriptive',
+    active: false
+  },
   {
     id: 'linear-algebra',
     title: 'Linear Algebra',
-    desc: 'Explore the structure of space through vectors and matrices.',
+    desc: 'Vectors, matrices, and spatial transformations.',
     icon: Grid,
     href: '/linear-algebra/vectors',
     active: true
   },
   {
-    id: 'probability',
-    title: 'Probability',
-    desc: 'Understand uncertainty and the laws of chance.',
+    id: 'probability-theory',
+    title: 'Probability Theory',
+    desc: 'Modeling uncertainty and random variables.',
     icon: PieChart,
-    href: '#',
+    href: '/probability/basics',
     active: false
   },
   {
-    id: 'statistics',
-    title: 'Statistics',
-    desc: 'Describe the world through data and distributions.',
+    id: 'statistical-inference',
+    title: 'Statistical Inference',
+    desc: 'Drawing conclusions from data populations.',
+    icon: Sigma,
+    href: '/statistics/inference',
+    active: false
+  },
+  {
+    id: 'regression-analysis',
+    title: 'Regression Analysis',
+    desc: 'Predicting relationships between variables.',
+    icon: TrendingUp,
+    href: '/statistics/regression',
+    active: false
+  },
+  {
+    id: 'hypothesis-testing',
+    title: 'Hypothesis Testing',
+    desc: 'Validating mathematical claims with data.',
     icon: Activity,
-    href: '#',
+    href: '/statistics/testing',
+    active: false
+  },
+  {
+    id: 'time-series',
+    title: 'Time Series Analysis',
+    desc: 'Forecasting trends and seasonal cycles.',
+    icon: Layers,
+    href: '/statistics/time-series',
+    active: false
+  },
+  {
+    id: 'machine-learning',
+    title: 'Machine Learning Basics',
+    desc: 'Algorithmic approaches to data patterns.',
+    icon: Microscope,
+    href: '/ml/basics',
+    active: false
+  },
+  {
+    id: 'experiment-design',
+    title: 'Design of Experiment',
+    desc: 'Structuring rigorous scientific inquiries.',
+    icon: FlaskConical,
+    href: '/statistics/doe',
     active: false
   }
 ];
 
 export default function Home() {
   return (
-    <div className="min-h-screen bg-color-background flex flex-col">
+    <div className="min-h-screen bg-background flex flex-col">
       {/* Navbar */}
-      <nav className="h-16 flex items-center px-12 justify-between bg-card border-b border-divider sticky top-0 z-50">
+      <nav className="h-16 flex items-center px-12 justify-between bg-surface border-b border-border sticky top-0 z-50">
         <div className="text-xl font-bold tracking-tighter">
-          <span className="text-color-text">Intuition</span>
+          <span className="text-text">Intuition</span>
           <span className="text-primary">.Math</span>
         </div>
         <ThemeToggle />
       </nav>
 
       {/* Hero Section */}
-      <section className="py-24 px-6 flex flex-col items-center text-center">
+      <section className="pt-24 pb-16 px-6 flex flex-col items-center text-center">
         <div className="max-w-4xl">
-          <h1 className="text-5xl md:text-7xl font-bold mb-4 tracking-tight text-color-text">
+          <h1 className="text-5xl md:text-7xl font-extrabold mb-6 tracking-tight text-text">
             Intuition-First Mathematics
           </h1>
-          <p className="text-xl md:text-2xl text-text-dim max-w-2xl mx-auto mb-8 font-medium">
-            Building rigorous mathematical understanding through clean, interactive visualization.
+          <p className="text-xl md:text-2xl text-muted max-w-2xl mx-auto mb-10 font-medium leading-relaxed">
+            A clean, academic interface for building rigorous understanding through interactive software.
           </p>
-          <div className="w-24 h-1 bg-primary mx-auto rounded-full" />
+          <div className="divider-elegant w-32 mx-auto h-1 rounded-full" />
         </div>
       </section>
 
-      {/* Modules Grid */}
-      <section className="px-6 py-12 flex-grow bg-white/50 border-t border-divider">
+      {/* Subject Grid */}
+      <section className="px-6 py-16 flex-grow bg-surface/30 border-t border-border">
         <div className="max-w-7xl mx-auto">
-          <h2 className="text-sm font-bold mb-12 text-text-dim uppercase tracking-[0.3em] text-center">
-            Course Library
+          <h2 className="text-xs font-bold mb-16 text-muted uppercase tracking-[0.4em] text-center">
+            Departmental Library
           </h2>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            {modules.map((mod) => (
-              <ModuleCard
-                key={mod.id}
-                title={mod.title}
-                description={mod.desc}
-                href={mod.href}
-                icon={mod.icon}
-                active={mod.active}
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 items-stretch">
+            {subjects.map((sub) => (
+              <SubjectCard
+                key={sub.id}
+                title={sub.title}
+                description={sub.desc}
+                href={sub.href}
+                icon={sub.icon}
+                active={sub.active}
               />
             ))}
           </div>
@@ -80,17 +138,16 @@ export default function Home() {
       </section>
 
       {/* Footer */}
-      <footer className="py-12 border-t border-divider bg-card text-center text-sm text-text-dim font-medium tracking-wide">
-        <div className="max-w-7xl mx-auto px-6 flex flex-col md:flex-row justify-between items-center gap-4">
-          <div>Intuition.Math © 2026 | Academic Edition</div>
-          <div className="flex gap-8">
-            <a href="#" className="hover:text-primary">Philosophy</a>
-            <a href="#" className="hover:text-primary">Accessibility</a>
-            <a href="#" className="hover:text-primary">About</a>
+      <footer className="py-16 border-t border-border bg-surface text-center">
+        <div className="max-w-7xl mx-auto px-12 flex flex-col md:flex-row justify-between items-center gap-8 text-sm text-muted font-semibold tracking-wide">
+          <div>Intuition.Math © 2026 | Mathematical Software Interface</div>
+          <div className="flex gap-12">
+            <a href="#" className="hover:text-primary underline-offset-4 hover:underline">Graphing Engine</a>
+            <a href="#" className="hover:text-primary underline-offset-4 hover:underline">Documentation</a>
+            <a href="#" className="hover:text-primary underline-offset-4 hover:underline">University Access</a>
           </div>
         </div>
       </footer>
     </div>
   );
 }
-
