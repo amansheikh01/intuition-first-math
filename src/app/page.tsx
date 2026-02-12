@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { motion } from 'framer-motion';
 import Navbar from '@/components/ui/Navbar';
 import { Lightbulb, Shield, Zap } from 'lucide-react';
+import ConstantVisualizer from '@/components/visuals/ConstantVisualizer';
 
 export default function Home() {
   const containerVariants = {
@@ -75,25 +76,14 @@ export default function Home() {
               </div>
             </motion.div>
 
-            {/* Right Visual */}
+            {/* Right Visual - Constant Showcase */}
             <motion.div
               initial={{ opacity: 0, scale: 0.9 }}
               animate={{ opacity: 1, scale: 1 }}
               transition={{ duration: 1.2, delay: 0.2 }}
-              className="relative aspect-square lg:block flex items-center justify-center opacity-10 dark:opacity-20 translate-x-10 calm-anim"
+              className="flex items-center justify-center lg:justify-end"
             >
-              <svg viewBox="0 0 400 400" className="w-full h-full text-text-primary">
-                <circle cx="200" cy="200" r="150" fill="none" stroke="currentColor" strokeWidth="1" strokeDasharray="8 8" />
-                <motion.path
-                  d="M100 200 Q 200 100 300 200"
-                  stroke="currentColor"
-                  fill="none"
-                  strokeWidth="2"
-                  animate={{ d: ["M100 200 Q 200 100 300 200", "M100 200 Q 200 300 300 200", "M100 200 Q 200 100 300 200"] }}
-                  transition={{ duration: 8, repeat: Infinity, ease: "easeInOut" }}
-                />
-                <rect x="150" y="150" width="100" height="100" fill="none" stroke="currentColor" strokeWidth="1" transform="rotate(45 200 200)" />
-              </svg>
+              <ConstantVisualizer />
             </motion.div>
           </div>
         </section>
