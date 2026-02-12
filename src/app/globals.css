@@ -3,44 +3,22 @@
 @tailwind utilities;
 
 :root {
-  /* Fresh Academic Palette */
-  --primary: #1E2A78;
-  --accent: #3E6BFF;
-  --highlight: #00C2FF;
-  --bg-gradient: linear-gradient(180deg, #FFFFFF 0%, #F5F8FF 100%);
-  --text-main: #111827;
-  --text-muted: #4B5563;
-  --border-subtle: rgba(30, 42, 120, 0.08);
-  --bg-white: #ffffff;
+  --bg-page: linear-gradient(135deg, #0F172A, #111827);
+  --card-bg: #0F172A;
+  --text-primary: #f8fafc;
+  --text-secondary: #94a3b8;
 
-  /* Typography Scale */
   --font-serif: var(--font-playfair), 'Georgia', serif;
   --font-sans: var(--font-manrope), 'Inter', sans-serif;
-
-  /* Spacing System */
-  --section-px: 120px;
-  --section-px-tablet: 80px;
-  --section-px-mobile: 60px;
-}
-
-[data-theme='dark'] {
-  --primary: #818CF8;
-  --accent: #60A5FA;
-  --highlight: #22D3EE;
-  --bg-gradient: linear-gradient(180deg, #0F172A 0%, #1E293B 100%);
-  --text-main: #F8FAFC;
-  --text-muted: #94A3B8;
-  --border-subtle: rgba(255, 255, 255, 0.1);
-  --bg-white: #1E293B;
 }
 
 body {
-  background: var(--bg-gradient);
-  color: var(--text-main);
+  background: var(--bg-page);
+  color: var(--text-primary);
   font-family: var(--font-sans);
   margin: 0;
-  line-height: 1.625;
   min-height: 100vh;
+  -webkit-font-smoothing: antialiased;
 }
 
 h1,
@@ -48,100 +26,105 @@ h2,
 h3,
 h4 {
   font-family: var(--font-serif);
-  color: var(--primary);
-  font-weight: 700;
-  letter-spacing: -0.02em;
 }
 
-.layout-container {
-  max-width: 1100px;
+.showcase-container {
+  max-width: 1200px;
   margin: 0 auto;
-  padding: 0 2rem;
+  padding: 4rem 2rem;
 }
 
-.section-padding {
-  padding-top: var(--section-px);
-  padding-bottom: var(--section-px);
+.showcase-grid {
+  display: grid;
+  gap: 32px;
+  grid-template-columns: repeat(4, 1fr);
 }
 
 @media (max-width: 1024px) {
-  .section-padding {
-    padding-top: var(--section-px-tablet);
-    padding-bottom: var(--section-px-tablet);
+  .showcase-grid {
+    grid-template-columns: repeat(2, 1fr);
   }
 }
 
-@media (max-width: 768px) {
-  .section-padding {
-    padding-top: var(--section-px-mobile);
-    padding-bottom: var(--section-px-mobile);
+@media (max-width: 640px) {
+  .showcase-grid {
+    grid-template-columns: 1fr;
   }
 }
 
-/* Premium Card Design */
-.academic-card {
-  background: var(--bg-white);
-  border: 1px solid var(--border-subtle);
-  border-radius: 12px;
-  padding: 2rem;
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  height: 100%;
+/* Showcase Card Design */
+.showcase-card {
+  background: var(--card-bg);
+  height: 260px;
+  padding: 28px;
+  border-radius: 20px;
+  position: relative;
+  transition: all 0.3s ease;
   display: flex;
   flex-direction: column;
+  box-shadow: inset 0 0 20px rgba(255, 255, 255, 0.02);
+  backdrop-filter: blur(8px);
+  overflow: hidden;
 }
 
-.academic-card:hover {
-  transform: translateY(-8px);
-  border-color: var(--accent);
-  box-shadow: 0 12px 30px -10px rgba(62, 107, 255, 0.12);
+.showcase-card:hover {
+  transform: translateY(-8px) scale(1.02);
 }
 
-.glow-border {
-  position: relative;
-}
-
-.glow-border::after {
+/* Gradient Glowing Borders */
+.showcase-card::before {
   content: '';
   position: absolute;
-  inset: -1px;
-  border-radius: 12px;
+  inset: 0;
+  border-radius: 20px;
   padding: 1px;
-  background: linear-gradient(to right, var(--accent), var(--highlight));
-  mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  /* Border thickness */
+  background: var(--card-gradient);
+  -webkit-mask:
+    linear-gradient(#fff 0 0) content-box,
+    linear-gradient(#fff 0 0);
+  mask:
+    linear-gradient(#fff 0 0) content-box,
+    linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
   mask-composite: exclude;
-  opacity: 0;
+  opacity: 0.4;
   transition: opacity 0.3s ease;
-  pointer-events: none;
 }
 
-.academic-card:hover .glow-border::after {
+.showcase-card:hover::before {
   opacity: 1;
 }
 
-/* Abstract Grid Background */
-.math-grid {
-  background-size: 40px 40px;
-  background-image:
-    linear-gradient(to right, var(--border-subtle) 1px, transparent 1px),
-    linear-gradient(to bottom, var(--border-subtle) 1px, transparent 1px);
-  mask-image: radial-gradient(circle at center, black, transparent 80%);
+/* Glow Effect Overlay */
+.showcase-card::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: var(--card-gradient);
+  filter: blur(40px);
+  opacity: 0;
+  z-index: -1;
+  transition: opacity 0.3s ease;
 }
 
-/* Utilities */
-.text-gradient {
-  background: linear-gradient(135deg, var(--primary) 0%, var(--accent) 100%);
-  -webkit-background-clip: text;
-  background-clip: text;
-  -webkit-text-fill-color: transparent;
+.showcase-card:hover::after {
+  opacity: 0.15;
 }
 
-.glass {
-  background: rgba(255, 255, 255, 0.7);
-  backdrop-filter: blur(12px);
-  border: 1px solid rgba(255, 255, 255, 0.3);
+/* Theme Gradients */
+.theme-1 {
+  --card-gradient: linear-gradient(to bottom right, #1E3A8A, #3B82F6);
 }
 
-[data-theme='dark'] .glass {
-  background: rgba(15, 23, 42, 0.7);
-  border: 1px solid rgba(255, 255, 255, 0.1);
+.theme-2 {
+  --card-gradient: linear-gradient(to bottom right, #065F46, #10B981);
+}
+
+.theme-3 {
+  --card-gradient: linear-gradient(to bottom right, #5B21B6, #8B5CF6);
+}
+
+.theme-4 {
+  --card-gradient: linear-gradient(to bottom right, #0369A1, #22D3EE);
 }
