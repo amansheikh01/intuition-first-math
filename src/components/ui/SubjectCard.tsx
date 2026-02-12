@@ -1,5 +1,3 @@
-'use client';
-
 import React from 'react';
 import Link from 'next/link';
 import { LucideIcon, ArrowRight } from 'lucide-react';
@@ -13,35 +11,31 @@ interface SubjectCardProps {
 }
 
 export default function SubjectCard({ title, description, href, icon: Icon, active = true }: SubjectCardProps) {
-    const cardContent = (
-        <div className={`academic-card ${!active ? 'opacity-60 grayscale cursor-not-allowed' : 'cursor-pointer group'}`}>
-            <div className="flex items-center gap-3 mb-4">
-                <div className={`p-1.5 rounded-lg ${active ? 'bg-accent/5 text-accent' : 'bg-muted/10 text-muted'}`}>
-                    <Icon className="w-3.5 h-3.5" />
+    return (
+        <Link href={href} className={`block h-full ${!active && 'pointer-events-none opacity-50'}`}>
+            <div className="academic-card glow-border group">
+                <div className="mb-6 flex items-center justify-between">
+                    <div className="p-2.5 rounded-xl bg-accent/5 text-accent transition-colors group-hover:bg-accent group-hover:text-white">
+                        <Icon size={20} strokeWidth={1.5} />
+                    </div>
+                    <ArrowRight size={16} className="text-border-subtle group-hover:text-accent transition-all transform group-hover:translate-x-1" />
                 </div>
-                <h3 className="card-title !mb-0 font-semibold">{title}</h3>
-            </div>
 
-            <p className="text-[12px] font-normal text-text-muted leading-relaxed mb-5 flex-grow">
-                {description}
-            </p>
+                <h3 className="text-xl mb-3 font-serif font-bold text-primary group-hover:text-accent transition-colors">
+                    {title}
+                </h3>
 
-            <div className="flex items-center justify-between pt-4 border-t border-border-light">
-                <span className={`text-[8px] font-black uppercase tracking-[0.2em] ${active ? 'text-accent' : 'text-muted'}`}>
-                    {active ? 'Research Core' : 'Proposed'}
-                </span>
-                {active && (
-                    <span className="text-[10px] font-bold text-primary group-hover:text-accent transition-colors flex items-center gap-1">
-                        Inquiry <ArrowRight size={10} />
+                <p className="text-sm text-text-muted leading-relaxed font-sans">
+                    {description}
+                </p>
+
+                <div className="mt-auto pt-6 flex items-center gap-2">
+                    <div className="h-[1px] w-6 bg-accent/20 group-hover:w-10 group-hover:bg-accent transition-all duration-300" />
+                    <span className="text-[10px] font-bold uppercase tracking-widest text-accent opacity-0 group-hover:opacity-100 transition-opacity">
+                        Explore Module
                     </span>
-                )}
+                </div>
             </div>
-        </div>
+        </Link>
     );
-
-    if (active) {
-        return <Link href={href} className="block">{cardContent}</Link>;
-    }
-
-    return <div className="block">{cardContent}</div>;
 }
