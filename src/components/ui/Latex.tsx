@@ -18,5 +18,13 @@ export default function Latex({ formula, inline = true }: LatexProps) {
         }
     }, [formula, inline]);
 
-    return <span ref={containerRef} />;
+    if (!inline) {
+        return (
+            <div className="my-8 flex justify-center w-full overflow-x-auto">
+                <span ref={containerRef} />
+            </div>
+        );
+    }
+
+    return <span ref={containerRef} className="mx-1" />;
 }
