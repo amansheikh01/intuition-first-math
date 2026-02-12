@@ -5,7 +5,7 @@ import Link from 'next/link';
 import { motion } from 'framer-motion';
 import Navbar from '@/components/ui/Navbar';
 import { Lightbulb, Shield, Zap } from 'lucide-react';
-import PiApproximationVisualizer from '@/components/visuals/PiApproximationVisualizer';
+import MonteCarloPiVisualizer from '@/components/visuals/MonteCarloPiVisualizer';
 
 export default function Home() {
   const containerVariants = {
@@ -55,14 +55,14 @@ export default function Home() {
               </div>
             </motion.div>
 
-            {/* Right Visual - Pi Approximation */}
+            {/* Right Visual - Monte Carlo Pi Simulation */}
             <motion.div
               initial={{ opacity: 0, scale: 0.9 }}
               animate={{ opacity: 1, scale: 1 }}
               transition={{ duration: 1.2, delay: 0.2 }}
               className="flex items-center justify-center lg:justify-end"
             >
-              <PiApproximationVisualizer />
+              <MonteCarloPiVisualizer />
             </motion.div>
           </div>
         </section>
