@@ -14,21 +14,26 @@ interface SubjectCardProps {
 
 export default function SubjectCard({ title, description, href, icon: Icon, active = true }: SubjectCardProps) {
     const cardContent = (
-        <div className={`academic-card h-full flex flex-col items-center text-center p-8 ${!active ? 'opacity-60 grayscale cursor-not-allowed' : 'group cursor-pointer'}`}>
-            <div className="flex justify-center mb-6">
-                <Icon className={`w-12 h-12 ${active ? 'text-primary' : 'text-muted'}`} />
+        <div className={`rebuilt-card ${!active ? 'opacity-50 grayscale cursor-not-allowed text-muted' : 'group cursor-pointer'}`}>
+            <div className={`p-4 rounded-xl mb-6 transition-all ${active ? 'bg-accent/5 text-accent group-hover:scale-110' : 'bg-border-light/20 text-muted'}`}>
+                <Icon className="w-8 h-8" />
             </div>
-            <h3 className="text-xl font-bold mb-2 text-text">{title}</h3>
-            <div className="divider-elegant" />
-            <p className="text-sm text-muted mb-8 flex-grow">{description}</p>
-            <div className="mt-auto w-full">
+
+            <h3 className="text-lg font-bold text-primary mb-1">{title}</h3>
+            <div className="card-divider" />
+
+            <p className="text-sm font-medium text-muted leading-relaxed mb-6">
+                {description}
+            </p>
+
+            <div className="mt-auto pt-4">
                 {active ? (
-                    <span className="inline-block w-full py-3 bg-primary text-white rounded-lg text-sm font-semibold transition-colors hover:bg-accent">
-                        Explore Subject
+                    <span className="text-xs font-bold uppercase tracking-wider text-accent group-hover:underline">
+                        Explore Department
                     </span>
                 ) : (
-                    <span className="inline-block w-full py-3 border border-border text-muted rounded-lg text-sm font-semibold">
-                        Coming Soon
+                    <span className="text-xs font-bold uppercase tracking-wider text-muted">
+                        Inactive Access
                     </span>
                 )}
             </div>
