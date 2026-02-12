@@ -13,20 +13,18 @@ import {
   Activity,
   ArrowRight,
   ChevronRight,
-  Database,
-  LineChart,
-  FunctionSquare
+  Search,
+  BookOpen,
+  Globe
 } from 'lucide-react';
 import ThemeToggle from '@/components/ui/ThemeToggle';
 import SubjectCard from '@/components/ui/SubjectCard';
-import LiveGraphDemo from '@/components/viz/LiveGraphDemo';
-import AnalyticalIllustration from '@/components/ui/AnalyticalIllustration';
 
 const subjects = [
   {
     id: 'descriptive-statistics',
     title: 'Descriptive Statistics',
-    desc: 'Quantitative summarization of data distributions and patterns.',
+    desc: 'Methods for summarizing and visualizing data distributions.',
     icon: BarChart,
     href: '/statistics/descriptive',
     active: false
@@ -34,7 +32,7 @@ const subjects = [
   {
     id: 'linear-algebra',
     title: 'Linear Algebra',
-    desc: 'Vector spaces and linear transformations in modern analytics.',
+    desc: 'The study of vector spaces and linear transformations.',
     icon: Grid,
     href: '/linear-algebra/vectors',
     active: true
@@ -42,7 +40,7 @@ const subjects = [
   {
     id: 'probability-theory',
     title: 'Probability Theory',
-    desc: 'Mathematical foundations of uncertainty and random variables.',
+    desc: 'Mathematical foundations of random processes and uncertainty.',
     icon: PieChart,
     href: '/probability/basics',
     active: false
@@ -50,7 +48,7 @@ const subjects = [
   {
     id: 'statistical-inference',
     title: 'Statistical Inference',
-    desc: 'Deductive reasoning and population parameter estimation.',
+    desc: 'Drawing conclusions about populations from sample data.',
     icon: Sigma,
     href: '/statistics/inference',
     active: false
@@ -58,7 +56,7 @@ const subjects = [
   {
     id: 'regression-analysis',
     title: 'Regression Analysis',
-    desc: 'Predictive modeling and relationship quantification.',
+    desc: 'Investigating relationships between dependent and independent variables.',
     icon: TrendingUp,
     href: '/statistics/regression',
     active: false
@@ -66,7 +64,7 @@ const subjects = [
   {
     id: 'hypothesis-testing',
     title: 'Hypothesis Testing',
-    desc: 'Rigorous validation of mathematical claims via data.',
+    desc: 'Scientific methods for validating mathematical claims.',
     icon: Activity,
     href: '/statistics/testing',
     active: false
@@ -74,15 +72,15 @@ const subjects = [
   {
     id: 'time-series',
     title: 'Time Series Analysis',
-    desc: 'Longitudinal data trends and seasonal forecasting.',
+    desc: 'Analyzing data ordered in time to forecast future points.',
     icon: Layers,
     href: '/statistics/time-series',
     active: false
   },
   {
     id: 'machine-learning',
-    title: 'Machine Learning Basics',
-    desc: 'Algorithmic approaches to heavy-duty data harvesting.',
+    title: 'Machine Learning',
+    desc: 'Algorithmic foundations for statistical pattern recognition.',
     icon: Microscope,
     href: '/ml/basics',
     active: false
@@ -90,7 +88,7 @@ const subjects = [
   {
     id: 'experiment-design',
     title: 'Design of Experiment',
-    desc: 'Systematic approaches to rigorous scientific inquiry.',
+    desc: 'Structured approaches to scientific data collection.',
     icon: FlaskConical,
     href: '/statistics/doe',
     active: false
@@ -99,131 +97,134 @@ const subjects = [
 
 export default function Home() {
   return (
-    <div className="min-h-screen bg-bg">
-      {/* Navigation */}
-      <nav className="h-16 border-b border-border-light bg-surface/80 backdrop-blur-md sticky top-0 z-50">
+    <div className="min-h-screen">
+      {/* Academy Navigation */}
+      <nav className="h-20 bg-bg border-b border-border-light sticky top-0 z-50">
         <div className="layout-container h-full flex items-center justify-between">
-          <div className="flex items-center gap-2">
-            <div className="bg-primary p-1 rounded-md text-surface">
-              <LineChart size={18} />
+          <div className="flex items-center gap-12">
+            <div className="text-xl font-bold tracking-tight text-primary flex items-center gap-2">
+              <span className="font-serif italic font-bold text-2xl">I</span>
+              <span className="uppercase tracking-[0.2em] text-sm pt-1">IntuitionFirst</span>
             </div>
-            <span className="text-lg font-black tracking-tighter text-primary">ANALYSIS.HUB</span>
+
+            <div className="hidden lg:flex items-center gap-8 text-[11px] font-bold uppercase tracking-widest text-text-muted">
+              <a href="#" className="hover:text-primary transition-colors">Library</a>
+              <a href="#" className="hover:text-primary transition-colors">Research Labs</a>
+              <a href="#" className="hover:text-primary transition-colors">Documentation</a>
+            </div>
           </div>
-          <div className="flex items-center gap-8">
-            <div className="hidden md:flex gap-6 text-[11px] font-black uppercase tracking-widest text-text-muted">
-              <a href="#" className="hover:text-accent transition-colors">Infrastructure</a>
-              <a href="#" className="hover:text-accent transition-colors">Methods</a>
-              <a href="#" className="hover:text-accent transition-colors">Academic Log</a>
-            </div>
+
+          <div className="flex items-center gap-6">
+            <button className="text-text-muted hover:text-primary transition-colors">
+              <Search size={18} />
+            </button>
             <ThemeToggle />
           </div>
         </div>
       </nav>
 
       <main>
-        {/* HERO SECTION */}
-        <section className="section-padding border-b border-border-light bg-surface relative overflow-hidden">
-          <div className="absolute inset-0 opacity-[0.03] pointer-events-none">
-            <div className="w-full h-full" style={{ backgroundImage: 'radial-gradient(var(--primary) 1px, transparent 1px)', backgroundSize: '32px 32px' }} />
-          </div>
-
-          <div className="layout-container relative z-10">
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
-              <div className="space-y-8 text-left animate-in fade-in slide-in-from-left-8 duration-1000">
-                <div className="inline-block px-3 py-1 bg-accent/10 border border-accent/20 rounded-full text-accent text-[10px] font-black uppercase tracking-[0.2em]">
-                  Statistical Standards v4.0
-                </div>
-
-                <h1 className="text-6xl md:text-8xl font-black text-primary leading-[1] tracking-tighter">
-                  Rigorous <br />
-                  Analytics <br />
-                  Interface.
-                </h1>
-
-                <p className="text-lg md:text-xl text-text-muted font-medium max-w-xl leading-relaxed">
-                  A high-performance computational platform for building intuition through rigorous mathematical modeling and real-time visualization systems.
-                </p>
-
-                <div className="flex flex-wrap gap-4">
-                  <button className="px-8 py-4 bg-primary text-surface rounded-xl font-black text-sm uppercase tracking-widest hover:opacity-90 transition-all flex items-center gap-2 shadow-lg shadow-primary/10">
-                    Deploy Engine <ArrowRight size={18} />
-                  </button>
-                  <button className="px-8 py-4 bg-surface border-2 border-primary text-primary rounded-xl font-black text-sm uppercase tracking-widest hover:bg-bg transition-all">
-                    Core Methods
-                  </button>
-                </div>
+        {/* Research Hero */}
+        <section className="pt-24 pb-16 border-b border-border-light">
+          <div className="layout-container">
+            <div className="max-w-3xl animate-in fade-in slide-in-from-top-4 duration-700">
+              <div className="inline-flex items-center gap-2 text-accent font-bold text-[10px] uppercase tracking-[0.3em] mb-6">
+                <div className="w-1.5 h-1.5 rounded-full bg-accent" />
+                Open Academic Platform
               </div>
 
-              <div className="relative">
-                <AnalyticalIllustration />
-              </div>
-            </div>
-          </div>
-        </section>
+              <h1 className="text-4xl md:text-5xl lg:text-6xl mb-8 leading-[1.15]">
+                Mathematical Intuition through <br />
+                Computational Rigor.
+              </h1>
 
-        {/* INTERACTIVE DEMO SECTION */}
-        <section className="section-padding bg-bg relative">
-          <div className="layout-container flex flex-col items-center">
-            <div className="max-w-2xl text-center mb-16 space-y-4">
-              <div className="flex justify-center">
-                <div className="w-12 h-1 bg-accent rounded-full mb-4" />
-              </div>
-              <h2 className="text-3xl md:text-4xl font-black text-primary tracking-tight">
-                Live Computational Proof
-              </h2>
-              <p className="text-text-muted font-medium leading-relaxed">
-                Interact with the underlying mathematical core. Modify parameters and observe real-time divergence in deterministic systems.
+              <p className="text-lg md:text-xl text-text-muted font-normal max-w-2xl leading-relaxed mb-10">
+                A collaborative research environment providing structured foundations and advanced modeling
+                for modern mathematical inquiry and institutional analysis.
               </p>
-            </div>
 
-            <div className="w-full flex justify-center">
-              <LiveGraphDemo />
+              <div className="flex flex-wrap gap-4">
+                <button className="px-6 py-3 bg-primary text-bg font-bold text-xs uppercase tracking-widest hover:opacity-90 transition-all rounded-[2px]">
+                  Access Library
+                </button>
+                <button className="px-6 py-3 border border-primary text-primary font-bold text-xs uppercase tracking-widest hover:bg-surface transition-all rounded-[2px] flex items-center gap-2">
+                  View Documentation <ChevronRight size={14} />
+                </button>
+              </div>
             </div>
           </div>
         </section>
 
-        {/* SUBJECT GRID SECTION */}
-        <section className="section-padding bg-surface border-t border-border-light relative overflow-hidden">
-          <div className="layout-container relative z-10">
-            <div className="text-center mb-20">
-              <h2 className="text-sm font-black text-accent uppercase tracking-[0.6em] mb-4">Analytical Departments</h2>
-              <div className="h-px w-24 bg-border-light mx-auto" />
+        {/* Academic Modules Grid */}
+        <section className="section-padding bg-surface">
+          <div className="layout-container">
+            <div className="flex flex-col md:flex-row md:items-end justify-between mb-16 gap-4">
+              <div className="space-y-2">
+                <h2 className="text-2xl md:text-3xl">Departmental Modules</h2>
+                <p className="text-sm text-text-muted font-medium">Standardized computational research tracks</p>
+              </div>
+              <div className="flex gap-4 text-xs font-bold uppercase tracking-widest text-accent">
+                <span className="flex items-center gap-1"><BookOpen size={14} /> Core Curriculum</span>
+                <span className="text-border-light">//</span>
+                <span className="flex items-center gap-1 opacity-50"><Globe size={14} /> Peer Review</span>
+              </div>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-12 lg:gap-16 items-stretch">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 auto-rows-stretch">
               {subjects.map((sub, idx) => (
-                <div key={idx} className={`animate-in fade-in slide-in-from-bottom-8 duration-700 delay-${idx * 100}`}>
-                  <SubjectCard
-                    title={sub.title}
-                    description={sub.desc}
-                    href={sub.href}
-                    icon={sub.icon}
-                    active={sub.active}
-                  />
-                </div>
+                <SubjectCard
+                  key={sub.id}
+                  title={sub.title}
+                  description={sub.desc}
+                  href={sub.href}
+                  icon={sub.icon}
+                  active={sub.active}
+                />
               ))}
             </div>
           </div>
         </section>
       </main>
 
-      {/* Footer */}
-      <footer className="py-20 bg-primary text-surface/50 border-t border-primary-light">
-        <div className="layout-container text-center space-y-8">
-          <div className="flex justify-center items-center gap-2 opacity-80">
-            <LineChart size={24} />
-            <span className="text-xl font-black tracking-tighter text-surface uppercase italic">Analysis.Hub</span>
+      {/* Institutional Footer */}
+      <footer className="py-16 border-t border-border-light bg-bg">
+        <div className="layout-container">
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-12 mb-16">
+            <div className="md:col-span-2 space-y-6">
+              <div className="text-xl font-bold tracking-tight text-primary flex items-center gap-2 opacity-80">
+                <span className="font-serif italic font-bold text-2xl">I</span>
+                <span className="uppercase tracking-[0.2em] text-sm pt-1">IntuitionFirst</span>
+              </div>
+              <p className="text-xs text-text-muted leading-relaxed max-w-sm">
+                Dedicated to the advancement of mathematical pedagogy through interactive
+                software systems and rigorous computational standards.
+              </p>
+            </div>
+            <div>
+              <h4 className="text-[10px] font-bold uppercase tracking-widest text-primary mb-6">Resources</h4>
+              <ul className="space-y-3 text-xs text-text-muted">
+                <li><a href="#" className="hover:text-accent font-medium transition-colors">Methods Library</a></li>
+                <li><a href="#" className="hover:text-accent font-medium transition-colors">API Specification</a></li>
+                <li><a href="#" className="hover:text-accent font-medium transition-colors">Institutional SSO</a></li>
+              </ul>
+            </div>
+            <div>
+              <h4 className="text-[10px] font-bold uppercase tracking-widest text-primary mb-6">Foundation</h4>
+              <ul className="space-y-3 text-xs text-text-muted">
+                <li><a href="#" className="hover:text-accent font-medium transition-colors">Open Scholarship</a></li>
+                <li><a href="#" className="hover:text-accent font-medium transition-colors">Ethics Protocol</a></li>
+                <li><a href="#" className="hover:text-accent font-medium transition-colors">Contact Academy</a></li>
+              </ul>
+            </div>
           </div>
 
-          <div className="flex flex-wrap justify-center gap-12 text-xs font-bold uppercase tracking-widest">
-            <a href="#" className="hover:text-accent transition-colors">Open Source Base</a>
-            <a href="#" className="hover:text-accent transition-colors">Institutional License</a>
-            <a href="#" className="hover:text-accent transition-colors">API Keys</a>
-            <a href="#" className="hover:text-accent transition-colors">Changelog</a>
-          </div>
-
-          <div className="pt-8 border-t border-surface/10 text-[10px] font-mono tracking-widest opacity-40 uppercase">
-            Intuition.Math Engine © 2026 // Integrated Analytical Systems // Version 4.0.2-Stable
+          <div className="pt-8 border-t border-border-light flex flex-col md:flex-row justify-between items-center gap-4 text-[10px] font-bold uppercase tracking-widest text-text-muted opacity-60">
+            <div>© 2026 IntuitionFirst Mathematics Foundation</div>
+            <div className="flex gap-8">
+              <a href="#">Security</a>
+              <a href="#">Latency</a>
+              <a href="#">v4.0.5-PRO</a>
+            </div>
           </div>
         </div>
       </footer>

@@ -14,26 +14,27 @@ interface SubjectCardProps {
 
 export default function SubjectCard({ title, description, href, icon: Icon, active = true }: SubjectCardProps) {
     const cardContent = (
-        <div className={`rebuilt-card ${!active ? 'opacity-50 grayscale cursor-not-allowed text-muted' : 'group cursor-pointer'}`}>
-            <div className={`p-4 rounded-xl mb-6 transition-all ${active ? 'bg-accent/5 text-accent group-hover:scale-110' : 'bg-border-light/20 text-muted'}`}>
-                <Icon className="w-8 h-8" />
+        <div className={`academic-card ${!active ? 'opacity-60 grayscale cursor-not-allowed' : 'cursor-pointer group'}`}>
+            <div className="flex items-center gap-3 mb-4">
+                <div className={`p-2 rounded-sm ${active ? 'bg-accent/5 text-accent' : 'bg-muted/10 text-muted'}`}>
+                    <Icon className="w-5 h-5" />
+                </div>
+                <h3 className="card-title !mb-0">{title}</h3>
             </div>
 
-            <h3 className="text-lg font-bold text-primary mb-1">{title}</h3>
             <div className="card-divider" />
 
-            <p className="text-sm font-medium text-muted leading-relaxed mb-6">
+            <p className="text-sm font-normal text-text-muted leading-relaxed mb-6 flex-grow">
                 {description}
             </p>
 
-            <div className="mt-auto pt-4">
-                {active ? (
-                    <span className="text-xs font-bold uppercase tracking-wider text-accent group-hover:underline">
-                        Explore Department
-                    </span>
-                ) : (
-                    <span className="text-xs font-bold uppercase tracking-wider text-muted">
-                        Inactive Access
+            <div className="flex items-center justify-between mt-auto pt-4 border-t border-border-light">
+                <span className={`text-[10px] font-bold uppercase tracking-widest ${active ? 'text-accent' : 'text-muted'}`}>
+                    {active ? 'Research Module' : 'In Development'}
+                </span>
+                {active && (
+                    <span className="text-xs text-muted group-hover:text-accent font-medium transition-colors">
+                        View Details
                     </span>
                 )}
             </div>

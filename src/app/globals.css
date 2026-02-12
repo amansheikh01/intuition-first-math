@@ -3,50 +3,63 @@
 @tailwind utilities;
 
 :root {
-  /* 8px Spacing System */
+  /* Research Academy Spacing */
   --s-1: 8px;
   --s-2: 16px;
   --s-3: 24px;
   --s-4: 32px;
-  --s-5: 40px;
   --s-6: 48px;
   --s-8: 64px;
   --s-10: 80px;
 
-  /* Color Palette - Professional Analytical */
-  --bg: #f8fafc;
-  --surface: #ffffff;
-  --primary: #0f172a;
-  --accent: #3b82f6;
-  --text-main: #1e293b;
-  --text-muted: #64748b;
-  --border-light: #e2e8f0;
-  --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
-  --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
-  --radius-lg: 16px;
+  /* Academic Palette */
+  --bg: #ffffff;
+  --surface: #fcfcfc;
+  --primary: #1a1a1a;
+  --accent: #2563eb;
+  --text-main: #333333;
+  --text-muted: #666666;
+  --border-light: #eeeeee;
+
+  /* Typography Scale */
+  --font-serif: 'KaTeX_Main', 'Georgia', serif;
+  --font-sans: 'Inter', -apple-system, sans-serif;
+
+  --radius-sm: 4px;
+  --radius-md: 8px;
 }
 
 [data-theme='dark'] {
-  --bg: #020617;
-  --surface: #0f172a;
-  --primary: #f8fafc;
+  --bg: #121212;
+  --surface: #1a1a1a;
+  --primary: #f5f5f5;
   --accent: #60a5fa;
-  --text-main: #f1f5f9;
-  --text-muted: #94a3b8;
-  --border-light: #1e293b;
+  --text-main: #e0e0e0;
+  --text-muted: #a0a0a0;
+  --border-light: #2a2a2a;
 }
 
 body {
   background-color: var(--bg);
   color: var(--text-main);
-  font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  font-family: var(--font-sans);
   margin: 0;
-  line-height: 1.5;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
 }
 
-/* Base Layout Components */
+h1,
+h2,
+h3,
+h4 {
+  font-family: var(--font-serif);
+  color: var(--primary);
+  font-weight: 600;
+  letter-spacing: -0.01em;
+}
+
 .layout-container {
-  max-width: 1200px;
+  max-width: 1100px;
   margin-left: auto;
   margin-right: auto;
   padding-left: var(--s-4);
@@ -54,55 +67,45 @@ body {
 }
 
 .section-padding {
-  padding-top: var(--s-10);
-  padding-bottom: var(--s-10);
+  padding-top: var(--s-8);
+  padding-bottom: var(--s-8);
 }
 
-/* Rebuilt Subject Card Styles */
-.rebuilt-card {
+/* Academic Card Design */
+.academic-card {
   background: var(--surface);
   border: 1px solid var(--border-light);
-  border-radius: var(--radius-lg);
+  border-radius: var(--radius-sm);
   padding: var(--s-4);
-  /* Internal padding 32px as per request - wait, s-4 is 32px */
-  box-shadow: var(--shadow-sm);
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
   display: flex;
   flex-direction: column;
-  align-items: center;
-  text-align: center;
   height: 100%;
 }
 
-.rebuilt-card:hover {
-  transform: translateY(-4px);
-  box-shadow: var(--shadow-md);
+.academic-card:hover {
   border-color: var(--accent);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.03);
+}
+
+.card-title {
+  font-family: var(--font-serif);
+  font-size: 1.25rem;
+  margin-bottom: var(--s-1);
+  color: var(--primary);
 }
 
 .card-divider {
-  width: 40px;
-  height: 2px;
+  width: 32px;
+  height: 1px;
   background: var(--border-light);
-  margin: var(--s-2) auto;
-  border-radius: 1px;
+  margin-bottom: var(--s-3);
 }
 
-/* Visualization Styles */
-.viz-frame {
-  width: 400px;
-  height: 400px;
-  background: #ffffff;
-  border: 1px solid var(--border-light);
-  border-radius: 8px;
-  overflow: hidden;
-  box-shadow: var(--shadow-sm);
-}
-
-/* Hide grid-background (old) and other leftovers */
+/* Remove leftovers */
+.rebuilt-card,
 .grid-background,
-.academic-card,
-.divider-elegant,
-.viz-container {
+.viz-frame,
+.AnalyticalIllustration {
   display: none;
 }
