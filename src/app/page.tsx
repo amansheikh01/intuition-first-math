@@ -96,8 +96,12 @@ const subjects = [
 ];
 
 export default function Home() {
+  const fanSubjects = subjects
+    .filter(s => s.active || ['descriptive-statistics', 'probability-theory', 'statistical-inference', 'regression-analysis'].includes(s.id))
+    .slice(0, 5);
+
   return (
-    <div className="min-h-screen">
+    <div className="min-h-screen bg-bg">
       {/* Academy Navigation */}
       <nav className="h-20 bg-bg border-b border-border-light sticky top-0 z-50">
         <div className="layout-container h-full flex items-center justify-between">
@@ -155,23 +159,37 @@ export default function Home() {
           </div>
         </section>
 
-        {/* Academic Modules Grid */}
-        <section className="section-padding bg-surface">
+        {/* Academic Modules - Fan Layout */}
+        <section className="section-padding bg-surface border-b border-border-light overflow-hidden">
           <div className="layout-container">
-            <div className="flex flex-col md:flex-row md:items-end justify-between mb-16 gap-4">
-              <div className="space-y-2">
-                <h2 className="text-2xl md:text-3xl">Departmental Modules</h2>
-                <p className="text-sm text-text-muted font-medium">Standardized computational research tracks</p>
+            <div className="text-center mb-16 space-y-4">
+              <div className="inline-block px-3 py-1 bg-accent/5 border border-accent/10 rounded-full text-accent text-[10px] font-bold uppercase tracking-[0.2em]">
+                Academic Library
               </div>
-              <div className="flex gap-4 text-xs font-bold uppercase tracking-widest text-accent">
-                <span className="flex items-center gap-1"><BookOpen size={14} /> Core Curriculum</span>
-                <span className="text-border-light">//</span>
-                <span className="flex items-center gap-1 opacity-50"><Globe size={14} /> Peer Review</span>
-              </div>
+              <h2 className="text-3xl md:text-4xl text-primary font-bold">Foundation Modules</h2>
+              <p className="text-sm text-text-muted max-w-xl mx-auto italic">
+                A curated selection of mathematical research tracks, fanning out for structured inquiry.
+              </p>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 auto-rows-stretch">
-              {subjects.map((sub, idx) => (
+            {/* Fan Arc Layout (Desktop) */}
+            <div className="hidden lg:flex arc-container items-center justify-center">
+              {fanSubjects.map((sub, idx) => (
+                <div key={sub.id} className={`arc-item-${idx}`}>
+                  <SubjectCard
+                    title={sub.title}
+                    description={sub.desc}
+                    href={sub.href}
+                    icon={sub.icon}
+                    active={sub.active}
+                  />
+                </div>
+              ))}
+            </div>
+
+            {/* Tablet/Mobile Fallback */}
+            <div className="lg:hidden grid grid-cols-1 md:grid-cols-2 gap-6">
+              {subjects.slice(0, 6).map((sub) => (
                 <SubjectCard
                   key={sub.id}
                   title={sub.title}
@@ -182,50 +200,23 @@ export default function Home() {
                 />
               ))}
             </div>
+
+            <div className="mt-20 text-center">
+              <button className="text-[11px] font-black uppercase tracking-[0.4em] text-text-muted hover:text-accent transition-colors flex items-center gap-2 mx-auto">
+                Browse Full Catalog <ChevronRight size={14} />
+              </button>
+            </div>
           </div>
         </section>
       </main>
 
-      {/* Institutional Footer */}
-      <footer className="py-16 border-t border-border-light bg-bg">
-        <div className="layout-container">
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-12 mb-16">
-            <div className="md:col-span-2 space-y-6">
-              <div className="text-xl font-bold tracking-tight text-primary flex items-center gap-2 opacity-80">
-                <span className="font-serif italic font-bold text-2xl">I</span>
-                <span className="uppercase tracking-[0.2em] text-sm pt-1">IntuitionFirst</span>
-              </div>
-              <p className="text-xs text-text-muted leading-relaxed max-w-sm">
-                Dedicated to the advancement of mathematical pedagogy through interactive
-                software systems and rigorous computational standards.
-              </p>
-            </div>
-            <div>
-              <h4 className="text-[10px] font-bold uppercase tracking-widest text-primary mb-6">Resources</h4>
-              <ul className="space-y-3 text-xs text-text-muted">
-                <li><a href="#" className="hover:text-accent font-medium transition-colors">Methods Library</a></li>
-                <li><a href="#" className="hover:text-accent font-medium transition-colors">API Specification</a></li>
-                <li><a href="#" className="hover:text-accent font-medium transition-colors">Institutional SSO</a></li>
-              </ul>
-            </div>
-            <div>
-              <h4 className="text-[10px] font-bold uppercase tracking-widest text-primary mb-6">Foundation</h4>
-              <ul className="space-y-3 text-xs text-text-muted">
-                <li><a href="#" className="hover:text-accent font-medium transition-colors">Open Scholarship</a></li>
-                <li><a href="#" className="hover:text-accent font-medium transition-colors">Ethics Protocol</a></li>
-                <li><a href="#" className="hover:text-accent font-medium transition-colors">Contact Academy</a></li>
-              </ul>
-            </div>
-          </div>
-
-          <div className="pt-8 border-t border-border-light flex flex-col md:flex-row justify-between items-center gap-4 text-[10px] font-bold uppercase tracking-widest text-text-muted opacity-60">
-            <div>© 2026 IntuitionFirst Mathematics Foundation</div>
-            <div className="flex gap-8">
-              <a href="#">Security</a>
-              <a href="#">Latency</a>
-              <a href="#">v4.0.5-PRO</a>
-            </div>
-          </div>
+      {/* Minimal Footer */}
+      <footer className="py-16 bg-bg border-t border-border-light text-center space-y-2">
+        <div className="text-[10px] font-black uppercase tracking-[0.3em] text-primary">
+          © 2026 IntuitionFirst
+        </div>
+        <div className="text-[9px] font-bold uppercase tracking-[0.2em] text-text-muted opacity-60">
+          Advancing Mathematical Understanding
         </div>
       </footer>
     </div>

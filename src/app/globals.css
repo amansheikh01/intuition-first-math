@@ -71,77 +71,76 @@ h4 {
   padding-bottom: var(--s-8);
 }
 
-/* Academic Card Design - Curved Redesign */
+/* Academic Card Design - Fan Redesign */
 .academic-card {
-  background: var(--bg);
+  background: #ffffff;
   border: 1px solid var(--border-light);
-  border-radius: 18px;
-  padding: 24px;
-  width: 260px;
+  border-radius: 16px;
+  padding: 22px;
+  width: 250px;
   height: min-content;
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   display: flex;
   flex-direction: column;
   position: relative;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.04);
 }
 
 .academic-card:hover {
   border-color: var(--accent);
-  box-shadow: 0 12px 24px rgba(0, 0, 0, 0.1);
-  transform: translateY(-10px) rotate(0deg) !important;
-  z-index: 50 !important;
+  box-shadow: 0 12px 28px rgba(0, 0, 0, 0.08);
+  transform: translateY(-12px) rotate(0deg) !important;
+  z-index: 100 !important;
 }
 
 .card-title {
   font-family: var(--font-serif);
-  font-size: 1.15rem;
+  font-size: 1.1rem;
   margin-bottom: var(--s-1);
   color: var(--primary);
 }
 
-/* Arc Layout System (Desktop Only) */
+/* Fan Arc Layout System (Desktop Only) */
 @media (min-width: 1024px) {
   .arc-container {
     display: flex;
     justify-content: center;
     align-items: flex-end;
-    gap: -20px;
-    /* Slight overlap */
-    perspective: 1000px;
-    padding-top: 60px;
-    padding-bottom: 40px;
-    min-height: 400px;
+    gap: -40px;
+    /* Stronger overlap for fan look */
+    perspective: 1200px;
+    padding-top: 80px;
+    padding-bottom: 60px;
+    min-height: 420px;
   }
 
+  /* Playing card style fan (±12deg) */
   .arc-item-0 {
-    transform: rotate(-4deg) translateY(15px);
+    transform: rotate(-12deg) translateY(35px) translateX(20px);
     z-index: 10;
   }
 
   .arc-item-1 {
-    transform: rotate(-2deg) translateY(5px);
+    transform: rotate(-6deg) translateY(10px) translateX(10px);
     z-index: 20;
   }
 
   .arc-item-2 {
-    transform: rotate(0deg) translateY(-10px);
+    transform: rotate(0deg) translateY(-5px);
     z-index: 30;
   }
 
-  /* Elevated Middle */
+  /* Center card slightly elevated */
   .arc-item-3 {
-    transform: rotate(2deg) translateY(5px);
+    transform: rotate(6deg) translateY(10px) translateX(-10px);
     z-index: 20;
   }
 
   .arc-item-4 {
-    transform: rotate(4deg) translateY(15px);
+    transform: rotate(12deg) translateY(35px) translateX(-20px);
     z-index: 10;
   }
 }
-
-
 
 /* Remove leftovers */
 .rebuilt-card,

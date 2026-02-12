@@ -2,7 +2,7 @@
 
 import React from 'react';
 import Link from 'next/link';
-import { LucideIcon } from 'lucide-react';
+import { LucideIcon, ArrowRight } from 'lucide-react';
 
 interface SubjectCardProps {
     title: string;
@@ -16,25 +16,23 @@ export default function SubjectCard({ title, description, href, icon: Icon, acti
     const cardContent = (
         <div className={`academic-card ${!active ? 'opacity-60 grayscale cursor-not-allowed' : 'cursor-pointer group'}`}>
             <div className="flex items-center gap-3 mb-4">
-                <div className={`p-2 rounded-sm ${active ? 'bg-accent/5 text-accent' : 'bg-muted/10 text-muted'}`}>
-                    <Icon className="w-5 h-5" />
+                <div className={`p-1.5 rounded-lg ${active ? 'bg-accent/5 text-accent' : 'bg-muted/10 text-muted'}`}>
+                    <Icon className="w-3.5 h-3.5" />
                 </div>
-                <h3 className="card-title !mb-0">{title}</h3>
+                <h3 className="card-title !mb-0 font-semibold">{title}</h3>
             </div>
 
-            <div className="card-divider" />
-
-            <p className="text-sm font-normal text-text-muted leading-relaxed mb-6 flex-grow">
+            <p className="text-[12px] font-normal text-text-muted leading-relaxed mb-5 flex-grow">
                 {description}
             </p>
 
-            <div className="flex items-center justify-between mt-auto pt-4 border-t border-border-light">
-                <span className={`text-[10px] font-bold uppercase tracking-widest ${active ? 'text-accent' : 'text-muted'}`}>
-                    {active ? 'Research Module' : 'In Development'}
+            <div className="flex items-center justify-between pt-4 border-t border-border-light">
+                <span className={`text-[8px] font-black uppercase tracking-[0.2em] ${active ? 'text-accent' : 'text-muted'}`}>
+                    {active ? 'Research Core' : 'Proposed'}
                 </span>
                 {active && (
-                    <span className="text-xs text-muted group-hover:text-accent font-medium transition-colors">
-                        View Details
+                    <span className="text-[10px] font-bold text-primary group-hover:text-accent transition-colors flex items-center gap-1">
+                        Inquiry <ArrowRight size={10} />
                     </span>
                 )}
             </div>
@@ -42,8 +40,8 @@ export default function SubjectCard({ title, description, href, icon: Icon, acti
     );
 
     if (active) {
-        return <Link href={href} className="block h-full">{cardContent}</Link>;
+        return <Link href={href} className="block">{cardContent}</Link>;
     }
 
-    return <div className="block h-full">{cardContent}</div>;
+    return <div className="block">{cardContent}</div>;
 }
