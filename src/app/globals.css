@@ -3,22 +3,39 @@
 @tailwind utilities;
 
 :root {
-  --bg-page: linear-gradient(135deg, #FAF7F2, #F5EFE6);
+  /* Light Mode - Warm Academic */
+  --bg-page: #FAF7F2;
+  --text-primary: #1F2937;
+  --text-secondary: #4B5563;
+  --accent: #6366F1;
+  --accent-soft: rgba(99, 102, 241, 0.1);
+  --border: #E8E2D8;
   --card-bg: #FFFFFF;
-  --text-primary: #1C1917;
-  --text-secondary: #57534E;
-  --border-neutral: #E8E2D8;
+  --nav-bg: rgba(250, 247, 242, 0.8);
 
   --font-serif: var(--font-playfair), 'Georgia', serif;
   --font-sans: var(--font-manrope), 'Inter', sans-serif;
 }
 
+[data-theme='dark'] {
+  /* Dark Mode - Research Navy */
+  --bg-page: #0F172A;
+  --text-primary: #E5E7EB;
+  --text-secondary: #9CA3AF;
+  --accent: #818CF8;
+  --accent-soft: rgba(129, 140, 248, 0.1);
+  --border: rgba(255, 255, 255, 0.1);
+  --card-bg: #1E293B;
+  --nav-bg: rgba(15, 23, 42, 0.8);
+}
+
 body {
-  background: var(--bg-page);
+  background-color: var(--bg-page);
   color: var(--text-primary);
   font-family: var(--font-sans);
   margin: 0;
   min-height: 100vh;
+  transition: background-color 0.4s ease, color 0.4s ease;
   -webkit-font-smoothing: antialiased;
 }
 
@@ -27,6 +44,7 @@ h2,
 h3,
 h4 {
   font-family: var(--font-serif);
+  color: var(--text-primary);
 }
 
 .layout-container {
@@ -35,49 +53,63 @@ h4 {
   padding: 0 2rem;
 }
 
-.showcase-container {
-  padding: 6rem 0;
+/* Button System */
+.btn {
+  padding: 0.75rem 1.75rem;
+  border-radius: 12px;
+  font-weight: 700;
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.15em;
+  transition: all 0.3s ease;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
 }
 
-.showcase-grid {
-  display: grid;
-  gap: 32px;
-  grid-template-columns: repeat(4, 1fr);
+.btn-primary {
+  background-color: var(--text-primary);
+  color: var(--bg-page);
+  box-shadow: 0 4px 14px 0 rgba(0, 0, 0, 0.1);
 }
 
-@media (max-width: 1024px) {
-  .showcase-grid {
-    grid-template-columns: repeat(2, 1fr);
-  }
+.btn-primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+  background-color: var(--accent);
 }
 
-@media (max-width: 640px) {
-  .showcase-grid {
-    grid-template-columns: 1fr;
-  }
+.btn-secondary {
+  border: 1px solid var(--border);
+  color: var(--text-primary);
 }
 
-/* Light Academic Card Design */
+.btn-secondary:hover {
+  transform: translateY(-2px);
+  background-color: var(--accent-soft);
+  border-color: var(--accent);
+}
+
+/* Subject Cards (Academic Design) */
 .academic-card {
-  background: var(--card-bg);
+  background-color: var(--card-bg);
   height: 260px;
   padding: 28px;
   border-radius: 20px;
-  border: 1px solid var(--border-neutral);
+  border: 1px solid var(--border);
   position: relative;
   transition: all 0.3s ease;
   display: flex;
   flex-direction: column;
-  box-shadow: 0 4px 20px -8px rgba(28, 25, 23, 0.05);
+  box-shadow: 0 4px 20px -8px rgba(0, 0, 0, 0.05);
   overflow: hidden;
 }
 
 .academic-card:hover {
   transform: translateY(-8px);
-  box-shadow: 0 20px 40px -12px rgba(28, 25, 23, 0.08);
+  box-shadow: 0 20px 40px -12px rgba(0, 0, 0, 0.1);
 }
 
-/* Top Accent Bar */
 .accent-bar {
   position: absolute;
   top: 0;
@@ -87,29 +119,38 @@ h4 {
   background: var(--accent-gradient);
 }
 
-/* Pastel Theme Gradients */
+/* Pastel Theme Gradients for Accent Bars */
 .theme-1 {
   --accent-gradient: linear-gradient(to right, #A5B4FC, #BAE6FD);
 }
 
-/* Soft Indigo -> Sky */
 .theme-2 {
   --accent-gradient: linear-gradient(to right, #A7F3D0, #D1FAE5);
 }
 
-/* Soft Sage -> Mint */
 .theme-3 {
   --accent-gradient: linear-gradient(to right, #FED7AA, #FFEDD5);
 }
 
-/* Warm Peach -> Light Orange */
 .theme-4 {
   --accent-gradient: linear-gradient(to right, #DDD6FE, #FDF2F8);
 }
 
-/* Lavender -> Blush */
+/* Feature Grid */
+.feature-card {
+  padding: 2.5rem;
+  background-color: var(--card-bg);
+  border-radius: 20px;
+  border: 1px solid var(--border);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
 
-/* Navigation Styles */
+.feature-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 12px 30px -10px rgba(0, 0, 0, 0.05);
+}
+
+/* Navbar Utilities */
 .nav-link {
   font-weight: 600;
   font-size: 0.875rem;
@@ -119,4 +160,21 @@ h4 {
 
 .nav-link:hover {
   color: var(--text-primary);
+}
+
+/* Background Visuals */
+.calm-anim {
+  animation: calm-float 10s ease-in-out infinite;
+}
+
+@keyframes calm-float {
+
+  0%,
+  100% {
+    transform: translateY(0) scale(1);
+  }
+
+  50% {
+    transform: translateY(-20px) scale(1.05);
+  }
 }
