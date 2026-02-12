@@ -4,7 +4,7 @@ import React from 'react';
 import Link from 'next/link';
 import { motion } from 'framer-motion';
 import Navbar from '@/components/ui/Navbar';
-import { Lightbulb, Shield, Zap } from 'lucide-react';
+import { ArrowRight, Sparkles, Target, Award } from 'lucide-react';
 import MonteCarloPiVisualizer from '@/components/visuals/MonteCarloPiVisualizer';
 
 export default function Home() {
@@ -27,30 +27,43 @@ export default function Home() {
 
       <main className="flex-grow flex flex-col">
         {/* Hero Section */}
-        <section className="layout-container flex-grow flex items-center py-20 lg:py-32">
-          <div className="grid lg:grid-cols-2 gap-12 items-center w-full">
+        <section className="relative layout-container flex-grow flex items-center py-32 lg:py-40">
+          {/* Subtle gradient background */}
+          <div className="absolute inset-0 bg-gradient-to-br from-accent/5 via-transparent to-transparent pointer-events-none" />
+
+          <div className="grid lg:grid-cols-2 gap-16 items-center w-full relative z-10">
             {/* Left Content */}
             <motion.div
               initial={{ opacity: 0, x: -30 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{ duration: 0.8 }}
-              className="z-10"
+              className="text-center lg:text-left"
             >
-              <h1 className="text-5xl md:text-7xl font-serif font-bold mb-8 leading-[1.1] tracking-tight text-text-primary">
-                Redefining Mathematical <br />
-                <span className="italic text-accent">Understanding</span>
+              <h1 className="text-5xl md:text-6xl lg:text-7xl font-serif font-bold mb-6 leading-[1.15] tracking-[-0.02em] text-text-primary">
+                Redefining Mathematical{' '}
+                <span className="italic text-accent bg-gradient-to-r from-accent to-accent/70 bg-clip-text text-transparent">
+                  Understanding
+                </span>
               </h1>
 
-              <p className="text-xl md:text-2xl text-text-secondary font-sans max-w-xl leading-relaxed mb-12">
+              <p className="text-lg md:text-xl text-text-secondary font-sans max-w-xl mx-auto lg:mx-0 leading-relaxed mb-10">
                 Advancing research-oriented learning systems built with visual intuition, logic, and computational rigor.
               </p>
 
-              <div className="flex flex-wrap gap-4">
-                <Link href="/subjects" className="btn btn-primary">
+              <div className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start">
+                <Link
+                  href="/subjects"
+                  className="group btn btn-primary gap-2"
+                >
                   Explore Subjects
+                  <ArrowRight size={16} className="group-hover:translate-x-1 transition-transform" />
                 </Link>
-                <Link href="/research" className="btn btn-secondary">
+                <Link
+                  href="/research"
+                  className="group btn btn-secondary gap-2"
+                >
                   Read Research
+                  <ArrowRight size={16} className="group-hover:translate-x-1 transition-transform" />
                 </Link>
               </div>
             </motion.div>
@@ -60,8 +73,10 @@ export default function Home() {
               initial={{ opacity: 0, scale: 0.9 }}
               animate={{ opacity: 1, scale: 1 }}
               transition={{ duration: 1.2, delay: 0.2 }}
-              className="flex items-center justify-center lg:justify-end"
+              className="relative flex items-center justify-center lg:justify-end"
             >
+              {/* Radial glow */}
+              <div className="absolute inset-0 bg-gradient-radial from-accent/10 via-transparent to-transparent blur-3xl opacity-50" />
               <MonteCarloPiVisualizer />
             </motion.div>
           </div>
@@ -83,9 +98,9 @@ export default function Home() {
               className="grid md:grid-cols-3 gap-8"
             >
               {[
-                { icon: Lightbulb, title: "Visual Intuition", desc: "Complex concepts dismantled into interactive, visual narratives that respect your intelligence." },
-                { icon: Zap, title: "Scientific Rigor", desc: "No simplifications. We maintain complete mathematical correctness while enhancing clarity." },
-                { icon: Shield, title: "Academic Standards", desc: "Designed for researchers and students who demand high-quality, professional educational systems." }
+                { icon: Sparkles, title: "Visual Intuition", desc: "Complex concepts dismantled into interactive, visual narratives that respect your intelligence." },
+                { icon: Target, title: "Scientific Rigor", desc: "No simplifications. We maintain complete mathematical correctness while enhancing clarity." },
+                { icon: Award, title: "Academic Standards", desc: "Designed for researchers and students who demand high-quality, professional educational systems." }
               ].map((feature, idx) => (
                 <motion.div key={idx} variants={itemVariants} className="feature-card text-center group">
                   <div className="w-12 h-12 bg-accent-soft text-accent rounded-xl flex items-center justify-center mx-auto mb-6 group-hover:scale-110 transition-transform">

@@ -55,8 +55,8 @@ h4 {
 
 /* Button System */
 .btn {
-  padding: 0.75rem 1.75rem;
-  border-radius: 12px;
+  padding: 0.875rem 2rem;
+  border-radius: 16px;
   font-weight: 700;
   font-size: 0.75rem;
   text-transform: uppercase;
@@ -65,29 +65,49 @@ h4 {
   display: inline-flex;
   align-items: center;
   justify-content: center;
+  gap: 0.5rem;
+  min-height: 48px;
 }
 
 .btn-primary {
   background-color: var(--text-primary);
   color: var(--bg-page);
-  box-shadow: 0 4px 14px 0 rgba(0, 0, 0, 0.1);
+  box-shadow: 0 4px 16px 0 rgba(0, 0, 0, 0.12);
 }
 
 .btn-primary:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+  transform: translateY(-3px);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.18);
   background-color: var(--accent);
 }
 
 .btn-secondary {
-  border: 1px solid var(--border);
+  border: 1.5px solid var(--border);
   color: var(--text-primary);
+  background-color: transparent;
+  position: relative;
+  overflow: hidden;
+}
+
+.btn-secondary::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-color: var(--accent-soft);
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 0.3s ease;
+  z-index: -1;
+}
+
+.btn-secondary:hover::before {
+  transform: scaleX(1);
 }
 
 .btn-secondary:hover {
-  transform: translateY(-2px);
-  background-color: var(--accent-soft);
+  transform: translateY(-3px);
   border-color: var(--accent);
+  color: var(--accent);
 }
 
 /* Subject Cards (Academic Design) */
